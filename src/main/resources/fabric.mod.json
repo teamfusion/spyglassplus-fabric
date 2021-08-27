@@ -1,20 +1,19 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "spyglassplus",
   "version": "${version}",
-
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Spyglass+",
+  "description": "This mod upgrades & enhances the current Spyglass ingame!",
   "authors": [
-    "Me!"
+    "Team Fusion"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/teamfusion/",
+    "sources": "https://github.com/teamfusion/spyglassplus-fabric"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/spyglassplus/icon.png",
 
   "environment": "*",
   "entrypoints": {
