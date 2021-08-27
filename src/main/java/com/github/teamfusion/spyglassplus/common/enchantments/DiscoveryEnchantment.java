@@ -7,6 +7,6 @@ import net.minecraft.entity.EquipmentSlot;
 public class DiscoveryEnchantment extends Enchantment {
 
     public DiscoveryEnchantment() {
-        super(Rarity.UNCOMMON, SpyglassPlusEnchantments.SPYGLASS, new EquipmentSlot[] {EquipmentSlot.MAINHAND});
+        super(Rarity.UNCOMMON, SpyglassPlusEnchantments.SPYGLASS, new EquipmentSlot[] {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
     }
 }
