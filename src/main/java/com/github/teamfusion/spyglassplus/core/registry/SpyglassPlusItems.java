@@ -1,12 +1,8 @@
 package com.github.teamfusion.spyglassplus.core.registry;
 
-import com.github.teamfusion.spyglassplus.core.SpyglassPlus;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.EnchantedBookItem;
+import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class SpyglassPlusItems {

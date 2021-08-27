@@ -18,7 +18,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.github.teamfusion.spyglassplus.core.SpyglassPlus"
+      "com.github.teamfusion.spyglassplus.SpyglassPlus"
+    ],
+    "mm:early_risers": [
+      "com.github.teamfusion.spyglassplus.core.EarlyRiser"
     ]
   },
   "mixins": [

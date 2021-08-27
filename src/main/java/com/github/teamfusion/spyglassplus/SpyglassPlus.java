@@ -1,4 +1,4 @@
-package com.github.teamfusion.spyglassplus.core;
+package com.github.teamfusion.spyglassplus;
 
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
 import com.google.common.reflect.Reflection;
