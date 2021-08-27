@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.github.teamfusion.spyglassplus",
+  "package": "com.github.teamfusion.spyglassplus.core.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [],
   "client": [],
