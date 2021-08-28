@@ -1,19 +1,19 @@
 package com.github.teamfusion.spyglassplus.common.enchantments;
 
-public class DiscoveryEnchantment extends SPEnchantment {
+public class IndicateEnchantment extends SPEnchantment{
 
-    public DiscoveryEnchantment() {
+    public IndicateEnchantment() {
         super(Rarity.UNCOMMON);
     }
 
     @Override
     public int getMinPower(int level) {
-        return level * 25;
+        return 15;
     }
 
     @Override
     public int getMaxLevel() {
-        return 3;
+        return 1;
     }
 
     @Override
@@ -23,6 +23,6 @@ public class DiscoveryEnchantment extends SPEnchantment {
 
     @Override
     public boolean isAvailableForRandomSelection() {
-        return false;
+        return true;
     }
 }

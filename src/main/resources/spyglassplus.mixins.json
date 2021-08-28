@@ -4,7 +4,8 @@
   "package": "com.github.teamfusion.spyglassplus.core.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "EnchantmentTargetAccess"
+    "EnchantmentTargetAccess",
+    "SpyglassItemMixin"
   ],
   "client": [],
   "injectors": {
