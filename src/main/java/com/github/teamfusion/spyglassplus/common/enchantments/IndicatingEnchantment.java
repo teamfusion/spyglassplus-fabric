@@ -1,8 +1,8 @@
 package com.github.teamfusion.spyglassplus.common.enchantments;
 
-public class IlluminateEnchantment extends SPEnchantment {
+public class IndicatingEnchantment extends SPEnchantment{
 
-    public IlluminateEnchantment() {
+    public IndicatingEnchantment() {
         super(Rarity.UNCOMMON);
     }
 
