@@ -1,13 +1,15 @@
 package com.github.teamfusion.spyglassplus;
 
-import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
+import com.github.teamfusion.spyglassplus.common.enchantments.DiscoveryEnchantment;
 import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,12 +25,10 @@ public class SpyglassPlus implements ModInitializer {
 			.icon(() -> new ItemStack(Items.SPYGLASS))
 			.build();
 
+	private static Enchantment DISCOVERY = Registry.register(Registry.ENCHANTMENT, new Identifier("spyglassplus", "discovery"), new DiscoveryEnchantment());
+
 	@Override
 	public void onInitialize() {
-		Reflection.initialize(
-				SpyglassPlusItems.class
-		);
-
 		log(Level.INFO, "Enhancing Spyglasses!");
 	}
 

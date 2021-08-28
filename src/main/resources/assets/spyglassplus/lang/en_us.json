@@ -1,4 +1,7 @@
 {
   "_comment": "Spyglass+ Tab",
-  "itemGroup.spyglassplus.spyglassplus_tab": "Spyglass+"
+  "itemGroup.spyglassplus.spyglassplus_tab": "Spyglass+",
+
+  "_comment2": "Enchantments",
+  "enchantment.spyglassplus.discovery": "Discovery"
 }

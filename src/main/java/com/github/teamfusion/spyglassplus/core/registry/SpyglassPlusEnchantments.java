@@ -5,4 +5,6 @@ import net.minecraft.enchantment.EnchantmentTarget;
 
 public class SpyglassPlusEnchantments {
     public static final EnchantmentTarget SPYGLASS = ClassTinkerers.getEnum(EnchantmentTarget.class, "SPYGLASS");
+
+        // ENCHANTMENTS //
 }
