@@ -46,7 +46,7 @@ public class SpyglassItemMixin extends Item {
                 if (i > 0) {
                     user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 1, 1, false, false, false));
                 }
-                int j = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.INDICATE, stack);
+                int j = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.INDICATING, stack);
                 if (j > 0) {
                     Entity entity = checkEntity(user, 64.0D);
                     StatusEffectInstance effectInstance = new StatusEffectInstance(StatusEffects.GLOWING, 2, 1, false, false, false);

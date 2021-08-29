@@ -1,6 +1,7 @@
 package com.github.teamfusion.spyglassplus;
 
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
+import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
 import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -26,8 +27,10 @@ public class SpyglassPlus implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		Reflection.initialize(
-				SpyglassPlusEnchantments.class
+				SpyglassPlusEnchantments.class,
+				SpyglassPlusItems.class
 		);
+		SpyglassPlusItems.register();
 
 		log(Level.INFO, "Enhancing Spyglasses!");
 	}

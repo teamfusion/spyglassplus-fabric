@@ -7,5 +7,8 @@
   "enchantment.spyglassplus.indicate": "Indicate",
   "enchantment.spyglassplus.illuminating": "Illuminating",
   "enchantment.spyglassplus.scrutiny": "Scrutiny",
-  "enchantment.spyglassplus.homeward_bound": "Homeward Bound"
+  "enchantment.spyglassplus.homeward_bound": "Homeward Bound",
+
+  "_comment3": "Items",
+  "item.spyglassplus.binoculars": "Binoculars"
 }
