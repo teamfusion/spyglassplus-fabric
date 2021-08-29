@@ -29,6 +29,7 @@ public class GameRendererMixin {
     @Shadow private float lastMovementFovMultiplier;
 
     @Shadow private float movementFovMultiplier;
+
     @Inject(at = @At("RETURN"), method = "getFov", cancellable = true)
     public void getFOV(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
@@ -38,8 +39,8 @@ public class GameRendererMixin {
             if (player.isUsingSpyglass() && i > 0) {
                 double value = 6D - i;
                 double lerpvalue = MathHelper.lerp(value, this.movementFovMultiplier, this.lastMovementFovMultiplier);
-                lerpvalue += 8.0D + (i - 1.0D) * -1.0D;
-                cir.setReturnValue(lerpvalue);
+                lerpvalue += 8.0D + (i - 1.0D) * -1.2D;
+                cir.setReturnValue((double) MathHelper.ceil(lerpvalue));
             }
         }
     }

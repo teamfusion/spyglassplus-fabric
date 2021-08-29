@@ -15,7 +15,7 @@ public class SpyglassPlusEnchantments {
 
     // ENCHANTMENTS //
     public static Enchantment DISCOVERY = register("discovery", new DiscoveryEnchantment());
-    public static Enchantment INDICATING = register("indicating", new IndicatingEnchantment());
+    public static Enchantment INDICATE = register("indicate", new IndicatingEnchantment());
     public static Enchantment ILLUMINATING = register("illuminating", new IlluminatingEnchantment());
     public static Enchantment SCRUTINY = register("scrutiny", new ScrutinyEnchantment());
 
