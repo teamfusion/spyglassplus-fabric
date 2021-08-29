@@ -2,6 +2,7 @@ package com.github.teamfusion.spyglassplus.core.registry;
 
 import com.chocohead.mm.api.ClassTinkerers;
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
+import com.github.teamfusion.spyglassplus.common.enchantments.CommandEnchantment;
 import com.github.teamfusion.spyglassplus.common.enchantments.DiscoveryEnchantment;
 import com.github.teamfusion.spyglassplus.common.enchantments.IlluminatingEnchantment;
 import com.github.teamfusion.spyglassplus.common.enchantments.IndicatingEnchantment;
@@ -18,6 +19,7 @@ public class SpyglassPlusEnchantments {
     public static Enchantment INDICATING = register("indicating", new IndicatingEnchantment());
     public static Enchantment ILLUMINATING = register("illuminating", new IlluminatingEnchantment());
     public static Enchantment SCRUTINY = register("scrutiny", new ScrutinyEnchantment());
+    public static Enchantment COMMAND = register("command", new CommandEnchantment());
 
     public static <E extends Enchantment> E register(String path, E enchantment) {
         return Registry.register(Registry.ENCHANTMENT, SpyglassPlus.id(path), enchantment);
