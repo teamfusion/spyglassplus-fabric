@@ -112,34 +112,22 @@ public class SpyglassItemMixin extends Item {
                     List<SnowGolemEntity> nearbySnowGolems = world.getEntitiesByClass(SnowGolemEntity.class, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
                     List<FoxEntity> nearbyFoxes = world.getEntitiesByClass(FoxEntity.class, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
                     for (WolfEntity wolfEntity : nearbyWolves) {
-                        if (wolfEntity.isAlive()) {
-                            if (entity == wolfEntity) {
-                                return;
-                            }
+                        if (wolfEntity.isAlive() && entity != wolfEntity) {
                             wolfEntity.setTarget((LivingEntity) entity);
                         }
                     }
                     for (IronGolemEntity ironGolemEntity : nearbyIronGolems) {
-                        if (ironGolemEntity.isAlive()) {
-                            if (entity == ironGolemEntity) {
-                                return;
-                            }
+                        if (ironGolemEntity.isAlive() && entity != ironGolemEntity) {
                             ironGolemEntity.setTarget((LivingEntity) entity);
                         }
                     }
                     for (SnowGolemEntity snowGolemEntity : nearbySnowGolems) {
-                        if (snowGolemEntity.isAlive()) {
-                            if (entity == snowGolemEntity) {
-                                return;
-                            }
+                        if (snowGolemEntity.isAlive() && entity != snowGolemEntity) {
                             snowGolemEntity.setTarget((LivingEntity) entity);
                         }
                     }
                     for (FoxEntity foxEntity : nearbyFoxes) {
-                        if (foxEntity.isAlive()) {
-                            if (entity == foxEntity) {
-                                return;
-                            }
+                        if (foxEntity.isAlive() && entity != foxEntity) {
                             foxEntity.setTarget((LivingEntity) entity);
                         }
                     }
