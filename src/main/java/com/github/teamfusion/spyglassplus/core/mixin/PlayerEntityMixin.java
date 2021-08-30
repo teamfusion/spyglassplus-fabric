@@ -19,8 +19,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "isUsingSpyglass", at = @At("RETURN"), cancellable = true)
     private void usingSpyglass(CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValueZ()) {
-            cir.setReturnValue(this.isUsingItem() && this.getActiveItem().isOf(SpyglassPlusItems.BINOCULARS));
+        if (!cir.getReturnValueZ() && this.isUsingItem() && this.getActiveItem().isOf(SpyglassPlusItems.BINOCULARS)) {
+            cir.setReturnValue(true);
         }
     }
 }
