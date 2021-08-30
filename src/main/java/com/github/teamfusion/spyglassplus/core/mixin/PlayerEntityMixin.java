@@ -17,8 +17,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    @Inject(at = @At("HEAD"), method = "isUsingSpyglass", cancellable = true)
+    @Inject(method = "isUsingSpyglass", at = @At("RETURN"), cancellable = true)
     private void usingSpyglass(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(this.isUsingItem() && (this.getActiveItem().isOf(Items.SPYGLASS) || this.getActiveItem().isOf(SpyglassPlusItems.BINOCULARS)));
+        if (!cir.getReturnValueZ()) {
+            cir.setReturnValue(this.isUsingItem() && this.getActiveItem().isOf(SpyglassPlusItems.BINOCULARS));
+        }
     }
 }
