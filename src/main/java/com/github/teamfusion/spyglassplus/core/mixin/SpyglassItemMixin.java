@@ -1,5 +1,6 @@
 package com.github.teamfusion.spyglassplus.core.mixin;
 
+import com.github.teamfusion.spyglassplus.core.ScrutinyAccess;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -97,6 +98,10 @@ public class SpyglassItemMixin extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity user, int slot, boolean selected) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        if (!((PlayerEntity)user).isUsingSpyglass() && EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack) > 0) {
+            ((ScrutinyAccess)minecraftClient.mouse).setZero();
+        }
         if (this.initiallyCommanded) {
             this.commandTicks--;
             if (this.getCommandTicks() == 0) {
@@ -137,7 +142,7 @@ public class SpyglassItemMixin extends Item {
     }
 
     private static Entity checkEntity(LivingEntity user, double distance) {
-        Predicate<Entity> e = entity -> !entity.isSpectator();
+        Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isLiving();
         Vec3d eyePos = user.getCameraPosVec(1.0F);
         Vec3d lookVec = user.getRotationVector();
         Vec3d distanceVec = eyePos.add(lookVec.multiply(distance));

@@ -7,6 +7,8 @@
     "EnchantmentTargetAccess",
     "GameRendererMixin",
     "PlayerEntityMixin",
+    "PlayerInventoryMixin",
+    "MouseMixin",
     "SpyglassItemMixin"
   ],
   "client": [],

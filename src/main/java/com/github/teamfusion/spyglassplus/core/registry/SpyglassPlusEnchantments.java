@@ -5,7 +5,7 @@ import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.common.enchantments.CommandEnchantment;
 import com.github.teamfusion.spyglassplus.common.enchantments.DiscoveryEnchantment;
 import com.github.teamfusion.spyglassplus.common.enchantments.IlluminatingEnchantment;
-import com.github.teamfusion.spyglassplus.common.enchantments.IndicatingEnchantment;
+import com.github.teamfusion.spyglassplus.common.enchantments.IndicateEnchantment;
 import com.github.teamfusion.spyglassplus.common.enchantments.ScrutinyEnchantment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -16,7 +16,7 @@ public class SpyglassPlusEnchantments {
 
     // ENCHANTMENTS //
     public static Enchantment DISCOVERY = register("discovery", new DiscoveryEnchantment());
-    public static Enchantment INDICATING = register("indicating", new IndicatingEnchantment());
+    public static Enchantment INDICATING = register("indicate", new IndicateEnchantment());
     public static Enchantment ILLUMINATING = register("illuminating", new IlluminatingEnchantment());
     public static Enchantment SCRUTINY = register("scrutiny", new ScrutinyEnchantment());
     public static Enchantment COMMAND = register("command", new CommandEnchantment());

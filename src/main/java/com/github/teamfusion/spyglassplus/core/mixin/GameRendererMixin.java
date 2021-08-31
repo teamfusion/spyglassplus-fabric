@@ -1,5 +1,6 @@
 package com.github.teamfusion.spyglassplus.core.mixin;
 
+import com.github.teamfusion.spyglassplus.core.ScrutinyAccess;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -18,6 +19,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
 
+    @Shadow private float lastMovementFovMultiplier;
+
+    @Shadow private float movementFovMultiplier;
+
     @Inject(at = @At("HEAD"), method = "getNightVisionStrength", cancellable = true)
     private static void getNightVisionStrength(LivingEntity entity, float f, CallbackInfoReturnable<Float> cir) {
         int i = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.ILLUMINATING, entity.getActiveItem());
@@ -26,21 +31,21 @@ public class GameRendererMixin {
         }
     }
 
-    @Shadow private float lastMovementFovMultiplier;
-
-    @Shadow private float movementFovMultiplier;
-
     @Inject(at = @At("RETURN"), method = "getFov", cancellable = true)
-    public void getFOV(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir) {
+    public void getFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         ClientPlayerEntity player = minecraftClient.player;
         if (player != null) {
-            int i = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, player.getActiveItem());
-            if (player.isUsingSpyglass() && i > 0) {
-                double value = 6D - i;
-                double lerpvalue = MathHelper.lerp(value, this.movementFovMultiplier, this.lastMovementFovMultiplier);
-                lerpvalue += 8.0D + (i - 1.0D) * -1.2D;
-                cir.setReturnValue((double) MathHelper.ceil(lerpvalue));
+            if (minecraftClient.options.getPerspective().isFirstPerson()) {
+                int i = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, player.getActiveItem());
+                if (player.isUsingSpyglass() && i > 0) {
+                    double defaultValue = 10.0D;
+                    int zoomValue = ((ScrutinyAccess)minecraftClient.mouse).getZoom();
+                    double lerpValue = MathHelper.lerp(defaultValue, this.movementFovMultiplier, this.lastMovementFovMultiplier);
+                    double finalValue = MathHelper.ceil(lerpValue) + 9.0D;
+                    finalValue -= zoomValue;
+                    cir.setReturnValue(finalValue);
+                }
             }
         }
     }
