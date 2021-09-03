@@ -5,13 +5,14 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "EnchantmentTargetAccess",
-    "GameRendererMixin",
     "PlayerEntityMixin",
-    "PlayerInventoryMixin",
-    "MouseMixin",
     "SpyglassItemMixin"
   ],
-  "client": [],
+  "client": [
+    "GameRendererMixin",
+    "PlayerInventoryMixin",
+    "MouseMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

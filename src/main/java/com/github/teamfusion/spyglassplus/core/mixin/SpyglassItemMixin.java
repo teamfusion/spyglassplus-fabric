@@ -1,8 +1,9 @@
 package com.github.teamfusion.spyglassplus.core.mixin;
 
-import com.github.teamfusion.spyglassplus.core.ScrutinyAccess;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
-import net.minecraft.client.MinecraftClient;
+import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusNetwork;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -18,7 +19,9 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpyglassItem;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -71,8 +74,6 @@ public class SpyglassItemMixin extends Item {
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (user instanceof PlayerEntity) {
-            MinecraftClient minecraftClient = MinecraftClient.getInstance();
-            if (minecraftClient.options.getPerspective().isFirstPerson()) {
                 int i = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.ILLUMINATING, stack);
                 if (i > 0) {
                     user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 1, 1, false, false, false));
@@ -92,15 +93,16 @@ public class SpyglassItemMixin extends Item {
                         this.setInitiallyCommanded(true);
                     }
                 }
-            }
+
         }
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity user, int slot, boolean selected) {
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
         if (!((PlayerEntity)user).isUsingSpyglass() && EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack) > 0) {
-            ((ScrutinyAccess)minecraftClient.mouse).setZero();
+            if (world.isClient()) return;
+            PacketByteBuf buf = PacketByteBufs.create();
+            ServerPlayNetworking.send((ServerPlayerEntity) user, SpyglassPlusNetwork.SCRUTINY_RESET,  buf);
         }
         if (this.initiallyCommanded) {
             this.commandTicks--;

@@ -19,6 +19,9 @@
     "main": [
       "com.github.teamfusion.spyglassplus.SpyglassPlus"
     ],
+    "client": [
+      "com.github.teamfusion.spyglassplus.SpyglassPlusClient"
+    ],
     "mm:early_risers": [
       "com.github.teamfusion.spyglassplus.core.EarlyRiser"
     ]
