@@ -30,7 +30,6 @@ public class SpyglassPlus implements ModInitializer {
 				SpyglassPlusEnchantments.class,
 				SpyglassPlusItems.class
 		);
-		SpyglassPlusItems.register();
 
 		log(Level.INFO, "Enhancing Spyglasses!");
 	}
