@@ -1,27 +1,27 @@
 package com.github.teamfusion.spyglassplus.core.registry;
 
-import com.chocohead.mm.api.ClassTinkerers;
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
-import com.github.teamfusion.spyglassplus.common.enchantments.CommandEnchantment;
-import com.github.teamfusion.spyglassplus.common.enchantments.DiscoveryEnchantment;
-import com.github.teamfusion.spyglassplus.common.enchantments.IlluminatingEnchantment;
-import com.github.teamfusion.spyglassplus.common.enchantments.IndicateEnchantment;
-import com.github.teamfusion.spyglassplus.common.enchantments.ScrutinyEnchantment;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentTarget;
-import net.minecraft.util.registry.Registry;
+import com.github.teamfusion.spyglassplus.common.enchantments.*;
+import net.minecraft.world.item.SpyglassItem;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class SpyglassPlusEnchantments {
-    public static final EnchantmentTarget SPYGLASS = ClassTinkerers.getEnum(EnchantmentTarget.class, "SPYGLASS");
+    public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, SpyglassPlus.MOD_ID);
+
+
+    public static final EnchantmentCategory SPYGLASS = EnchantmentCategory.create("SPYGLASS", item -> {
+        return item instanceof SpyglassItem;
+    });
 
     // ENCHANTMENTS //
-    public static Enchantment DISCOVERY = register("discovery", new DiscoveryEnchantment());
-    public static Enchantment INDICATING = register("indicate", new IndicateEnchantment());
-    public static Enchantment ILLUMINATING = register("illuminating", new IlluminatingEnchantment());
-    public static Enchantment SCRUTINY = register("scrutiny", new ScrutinyEnchantment());
-    public static Enchantment COMMAND = register("command", new CommandEnchantment());
+    public static RegistryObject<Enchantment> DISCOVERY = ENCHANTMENTS.register("discovery", DiscoveryEnchantment::new);
+    public static RegistryObject<Enchantment> INDICATING = ENCHANTMENTS.register("indicate", IndicateEnchantment::new);
+    public static RegistryObject<Enchantment> ILLUMINATING = ENCHANTMENTS.register("illuminating", IlluminatingEnchantment::new);
+    public static RegistryObject<Enchantment> SCRUTINY = ENCHANTMENTS.register("scrutiny", ScrutinyEnchantment::new);
+    public static RegistryObject<Enchantment> COMMAND = ENCHANTMENTS.register("command", CommandEnchantment::new);
 
-    public static <E extends Enchantment> E register(String path, E enchantment) {
-        return Registry.register(Registry.ENCHANTMENT, SpyglassPlus.id(path), enchantment);
-    }
 }

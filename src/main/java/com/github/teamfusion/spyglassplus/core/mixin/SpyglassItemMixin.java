@@ -1,31 +1,30 @@
 package com.github.teamfusion.spyglassplus.core.mixin;
 
+import com.github.teamfusion.spyglassplus.SpyglassPlus;
+import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
-import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusNetwork;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SpyglassItem;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpyglassItem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class SpyglassItemMixin extends Item {
     private boolean isCommanded = false;
     private boolean initiallyCommanded = false;
 
-    public SpyglassItemMixin(Settings settings) {
+    public SpyglassItemMixin(Properties settings) {
         super(settings);
     }
 
@@ -47,7 +46,7 @@ public class SpyglassItemMixin extends Item {
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return 1;
     }
 
@@ -72,37 +71,38 @@ public class SpyglassItemMixin extends Item {
     }
 
     @Override
-    public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (user instanceof PlayerEntity) {
-                int i = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.ILLUMINATING, stack);
-                if (i > 0) {
-                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 1, 1, false, false, false));
+    public void onUseTick(Level level, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+        if (user instanceof Player) {
+            int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), stack);
+            if (i > 0) {
+                user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1, 1, false, false, false));
+            }
+            int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), stack);
+            if (j > 0) {
+                Entity entity = checkEntity(user, 64.0D);
+                MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
+                if (entity != null) {
+                    ((LivingEntity) entity).addEffect(effectInstance);
                 }
-                int j = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.INDICATING, stack);
-                if (j > 0) {
-                    Entity entity = checkEntity(user, 64.0D);
-                    StatusEffectInstance effectInstance = new StatusEffectInstance(StatusEffects.GLOWING, 2, 1, false, false, false);
-                    if (entity != null) {
-                        ((LivingEntity) entity).addStatusEffect(effectInstance);
-                    }
+            }
+            int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), stack);
+            if (k > 0) {
+                Entity entity = checkEntity(user, 64.0D);
+                if (entity != null) {
+                    this.setInitiallyCommanded(true);
                 }
-                int k = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.COMMAND, stack);
-                if (k > 0) {
-                    Entity entity = checkEntity(user, 64.0D);
-                    if (entity != null) {
-                        this.setInitiallyCommanded(true);
-                    }
-                }
+            }
 
         }
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity user, int slot, boolean selected) {
-        if (!((PlayerEntity)user).isUsingSpyglass() && EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack) > 0) {
-            if (world.isClient()) return;
-            PacketByteBuf buf = PacketByteBufs.create();
-            ServerPlayNetworking.send((ServerPlayerEntity) user, SpyglassPlusNetwork.SCRUTINY_RESET,  buf);
+    public void inventoryTick(ItemStack stack, Level world, Entity user, int slot, boolean selected) {
+        if (!((Player) user).isScoping() && EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.SCRUTINY.get(), stack) > 0) {
+            if (world.isClientSide()) return;
+            if (user instanceof ServerPlayer) {
+                SpyglassPlus.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) user), new ScrutinyResetMessage());
+            }
         }
         if (this.initiallyCommanded) {
             this.commandTicks--;
@@ -113,27 +113,27 @@ public class SpyglassItemMixin extends Item {
                 if (this.isCommanded()) {
                     this.setCommanded(false);
                     Entity entity = checkEntity((LivingEntity) user, 64.0D);
-                    Box box = new Box(user.getBlockPos()).expand(6.0D);
-                    List<WolfEntity> nearbyWolves = world.getEntitiesByClass(WolfEntity.class, box, TameableEntity::isTamed);
-                    List<IronGolemEntity> nearbyIronGolems = world.getEntitiesByClass(IronGolemEntity.class, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
-                    List<SnowGolemEntity> nearbySnowGolems = world.getEntitiesByClass(SnowGolemEntity.class, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
-                    List<FoxEntity> nearbyFoxes = world.getEntitiesByClass(FoxEntity.class, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
-                    for (WolfEntity wolfEntity : nearbyWolves) {
+                    AABB box = new AABB(user.blockPosition()).inflate(6.0D);
+                    List<Wolf> nearbyWolves = world.getEntitiesOfClass(Wolf.class, box, TamableAnimal::isTame);
+                    List<IronGolem> nearbyIronGolems = world.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+                    List<SnowGolem> nearbySnowGolems = world.getEntitiesOfClass(SnowGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+                    List<Fox> nearbyFoxes = world.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+                    for (Wolf wolfEntity : nearbyWolves) {
                         if (wolfEntity.isAlive() && entity != wolfEntity) {
                             wolfEntity.setTarget((LivingEntity) entity);
                         }
                     }
-                    for (IronGolemEntity ironGolemEntity : nearbyIronGolems) {
+                    for (IronGolem ironGolemEntity : nearbyIronGolems) {
                         if (ironGolemEntity.isAlive() && entity != ironGolemEntity) {
                             ironGolemEntity.setTarget((LivingEntity) entity);
                         }
                     }
-                    for (SnowGolemEntity snowGolemEntity : nearbySnowGolems) {
+                    for (SnowGolem snowGolemEntity : nearbySnowGolems) {
                         if (snowGolemEntity.isAlive() && entity != snowGolemEntity) {
                             snowGolemEntity.setTarget((LivingEntity) entity);
                         }
                     }
-                    for (FoxEntity foxEntity : nearbyFoxes) {
+                    for (Fox foxEntity : nearbyFoxes) {
                         if (foxEntity.isAlive() && entity != foxEntity) {
                             foxEntity.setTarget((LivingEntity) entity);
                         }
@@ -144,13 +144,13 @@ public class SpyglassItemMixin extends Item {
     }
 
     private static Entity checkEntity(LivingEntity user, double distance) {
-        Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isLiving();
-        Vec3d eyePos = user.getCameraPosVec(1.0F);
-        Vec3d lookVec = user.getRotationVector();
-        Vec3d distanceVec = eyePos.add(lookVec.multiply(distance));
-        Box playerBox = user.getBoundingBox().stretch(lookVec.multiply(distance)).expand(1.0D);
-        EntityHitResult traceResult = ProjectileUtil.raycast(user, eyePos, distanceVec, playerBox, e, distance * distance);
-        if (traceResult == null) {
+        Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isAlive();
+        Vec3 eyePos = user.getEyePosition(1.0F);
+        Vec3 lookVec = user.getLookAngle();
+        Vec3 distanceVec = eyePos.add(lookVec.scale(distance));
+        AABB playerBox = user.getBoundingBox().expandTowards(lookVec.scale(distance)).inflate(1.0D);
+        EntityHitResult traceResult = ProjectileUtil.getEntityHitResult(user, eyePos, distanceVec, playerBox, e, distance * distance);
+        if (traceResult == null || traceResult.getEntity() instanceof TamableAnimal && ((TamableAnimal) traceResult.getEntity()).isTame() && ((TamableAnimal) traceResult.getEntity()).isOwnedBy(user)) {
             return null;
         }
         return traceResult.getEntity();

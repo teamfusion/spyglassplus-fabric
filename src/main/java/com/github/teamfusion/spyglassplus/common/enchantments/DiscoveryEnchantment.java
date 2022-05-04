@@ -7,7 +7,7 @@ public class DiscoveryEnchantment extends SPEnchantment {
     }
 
     @Override
-    public int getMinPower(int level) {
+    public int getMinCost(int level) {
         return level * 25;
     }
 
@@ -17,12 +17,12 @@ public class DiscoveryEnchantment extends SPEnchantment {
     }
 
     @Override
-    public boolean isAvailableForEnchantedBookOffer() {
+    public boolean isTradeable() {
         return true;
     }
 
     @Override
-    public boolean isAvailableForRandomSelection() {
+    public boolean isAllowedOnBooks() {
         return false;
     }
 }

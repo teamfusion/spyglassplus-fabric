@@ -2,15 +2,14 @@ package com.github.teamfusion.spyglassplus.core.registry;
 
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.common.items.BinocularsItem;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.item.Item;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class SpyglassPlusItems {
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpyglassPlus.MOD_ID);
 
-    public static final Item BINOCULARS = register("binoculars", new BinocularsItem(new FabricItemSettings().group(SpyglassPlus.SPYGLASSPLUS_TAB)));
 
-    public static<I extends Item> I register(String path, I item) {
-        return Registry.register(Registry.ITEM, SpyglassPlus.id(path), item);
-    }
+	public static final RegistryObject<Item> BINOCULARS = ITEMS.register("binoculars", () -> new BinocularsItem(new Item.Properties().tab(SpyglassPlus.SPYGLASSPLUS_TAB)));
 }

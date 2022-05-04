@@ -7,22 +7,22 @@ public class IlluminatingEnchantment extends SPEnchantment {
     }
 
     @Override
-    public int getMinPower(int level) {
-        return 15;
-    }
+	public int getMinCost(int level) {
+		return 15;
+	}
 
     @Override
     public int getMaxLevel() {
         return 1;
     }
 
-    @Override
-    public boolean isAvailableForEnchantedBookOffer() {
-        return true;
-    }
+	@Override
+	public boolean isTradeable() {
+		return true;
+	}
 
-    @Override
-    public boolean isAvailableForRandomSelection() {
-        return true;
-    }
+	@Override
+	public boolean isAllowedOnBooks() {
+		return true;
+	}
 }

@@ -7,7 +7,7 @@ public class CommandEnchantment extends SPEnchantment{
     }
 
     @Override
-    public int getMinPower(int level) {
+    public int getMinCost(int level) {
         return 15;
     }
 
@@ -17,12 +17,12 @@ public class CommandEnchantment extends SPEnchantment{
     }
 
     @Override
-    public boolean isAvailableForEnchantedBookOffer() {
+    public boolean isTradeable() {
         return true;
     }
 
     @Override
-    public boolean isAvailableForRandomSelection() {
+    public boolean isAllowedOnBooks() {
         return false;
     }
 }
