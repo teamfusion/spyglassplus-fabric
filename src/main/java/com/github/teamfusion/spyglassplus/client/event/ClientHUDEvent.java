@@ -5,6 +5,7 @@ import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -43,15 +44,15 @@ public class ClientHUDEvent {
 					if (entity instanceof LivingEntity) {
 						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE};
 
-						MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.health").withStyle(textformatting).append(" ").append(new TextComponent(((LivingEntity) entity).getHealth() + "/" + ((LivingEntity) entity).getMaxHealth())).withStyle(textformatting);
+						MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.health").withStyle(textformatting);
 
-						MutableComponent s2 = new TextComponent(((LivingEntity) entity).getHealth() + "/" + ((LivingEntity) entity).getMaxHealth()).withStyle(textformatting);
+						MutableComponent s2 = new TextComponent("*" + ((LivingEntity) entity).getMaxHealth()).withStyle(textformatting);
 
 
-						mc.font.draw(stack, s, (int) 330, (int) 50, 0xe0e0e0);
-						mc.font.draw(stack, s2, (int) 330, (int) 60, 0xe0e0e0);
+						mc.font.draw(stack, s, (int) 335, (int) 50, 0xe0e0e0);
+						mc.font.draw(stack, s2, (int) 335, (int) 60, 0xe0e0e0);
+						InventoryScreen.renderEntityInInventory(30, 200, 24, 0.0F, 0.0F, (LivingEntity) entity);
 					}
-
 				}
 				stack.popPose();
 			}

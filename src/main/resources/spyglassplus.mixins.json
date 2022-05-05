@@ -11,6 +11,8 @@
   ],
   "client": [
     "GameRendererMixin",
+    "GuiMixin",
+    "ItemRendererMixin",
     "MouseMixin",
     "PlayerInventoryMixin"
   ],
