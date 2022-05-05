@@ -10,5 +10,8 @@
   "enchantment.spyglassplus.command": "Command",
 
   "_comment3": "Items",
-  "item.spyglassplus.binoculars": "Binoculars"
+  "item.spyglassplus.binoculars": "Binoculars",
+
+  "_comment4": "Info",
+  "spyglassplus.spyglass.info.health": "Health"
 }
