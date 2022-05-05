@@ -121,7 +121,7 @@ public class SpyglassItemMixin extends Item {
                     List<IronGolem> nearbyIronGolems = world.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
                     List<SnowGolem> nearbySnowGolems = world.getEntitiesOfClass(SnowGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
                     List<Fox> nearbyFoxes = world.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-                    if (entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user)) {
+                    if (!(entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user))) {
                         for (Wolf wolfEntity : nearbyWolves) {
                             if (wolfEntity.isAlive() && entity != wolfEntity && entity instanceof LivingEntity) {
                                 wolfEntity.setTarget((LivingEntity) entity);
