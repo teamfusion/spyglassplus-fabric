@@ -3,7 +3,6 @@ package com.github.teamfusion.spyglassplus.core.mixin;
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
-import com.github.teamfusion.spyglassplus.core.utils.SpyGlassVecUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -21,9 +20,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpyglassItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -80,7 +81,7 @@ public class SpyglassItemMixin extends Item {
             }
             int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), stack);
             if (j > 0) {
-                Entity entity = checkEntityWithNonClip(user, 64.0D);
+                Entity entity = checkEntity(user, 64.0D);
                 MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
                 if (entity instanceof LivingEntity) {
                     ((LivingEntity) entity).addEffect(effectInstance);
@@ -88,7 +89,7 @@ public class SpyglassItemMixin extends Item {
             }
             int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), stack);
             if (k > 0) {
-                Entity entity = checkEntity(user, 64.0D);
+                Entity entity = checkEntityWithNoBlockClip(user, 64.0D);
                 MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
                 if (entity instanceof LivingEntity) {
                     ((LivingEntity) entity).addEffect(effectInstance);
@@ -115,7 +116,7 @@ public class SpyglassItemMixin extends Item {
                 this.setCommandTicks(100);
                 if (this.isCommanded()) {
                     this.setCommanded(false);
-                    Entity entity = checkEntity((LivingEntity) user, 64.0D);
+                    Entity entity = checkEntityWithNoBlockClip((LivingEntity) user, 64.0D);
                     AABB box = new AABB(user.blockPosition()).inflate(6.0D);
                     List<Wolf> nearbyWolves = world.getEntitiesOfClass(Wolf.class, box, TamableAnimal::isTame);
                     List<IronGolem> nearbyIronGolems = world.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
@@ -161,16 +162,26 @@ public class SpyglassItemMixin extends Item {
         return traceResult.getEntity();
     }
 
-    private static Entity checkEntityWithNonClip(LivingEntity user, double distance) {
+    private static Entity checkEntityWithNoBlockClip(LivingEntity user, double distance) {
         Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isAlive();
         Vec3 eyePos = user.getEyePosition(1.0F);
         Vec3 lookVec = user.getLookAngle();
         Vec3 distanceVec = eyePos.add(lookVec.scale(distance));
         AABB playerBox = user.getBoundingBox().expandTowards(lookVec.scale(distance)).inflate(1.0D);
-        EntityHitResult traceResult = SpyGlassVecUtils.getEntityHitWithNonClipResult(user, eyePos, distanceVec, playerBox, e, distance * distance);
+
+        HitResult hitresult = user.level.clip(new ClipContext(eyePos, distanceVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
+
+        if (hitresult.getType() != HitResult.Type.MISS) {
+            distanceVec = hitresult.getLocation();
+        }
+
+        EntityHitResult traceResult = ProjectileUtil.getEntityHitResult(user.getLevel(), user, eyePos, distanceVec, playerBox, e);
+
         if (traceResult == null) {
             return null;
         }
+
+
         return traceResult.getEntity();
     }
 }

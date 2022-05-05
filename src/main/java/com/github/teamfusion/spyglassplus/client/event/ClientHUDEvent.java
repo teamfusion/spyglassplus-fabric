@@ -3,14 +3,19 @@ package com.github.teamfusion.spyglassplus.client.event;
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -29,24 +34,50 @@ public class ClientHUDEvent {
 
 		int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.DISCOVERY.get(), mc.player.getUseItem());
 		if (k > 0) {
-			Entity entity = checkEntity(mc.player, 64.0D);
-			if (entity != null) {
-				mc.font.draw(stack, entity.getDisplayName(), (int) 20, (int) 50, 0xe0e0e0);
+			if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+				stack.pushPose();
+				Entity entity = checkEntityWithNoBlockClip(mc.player, 64.0D);
+				if (entity != null) {
+					mc.font.draw(stack, entity.getDisplayName(), (int) 20, (int) 50, 0xe0e0e0);
 
+					if (entity instanceof LivingEntity) {
+						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE};
+
+						MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.health").withStyle(textformatting).append(" ").append(new TextComponent(((LivingEntity) entity).getHealth() + "/" + ((LivingEntity) entity).getMaxHealth())).withStyle(textformatting);
+
+						MutableComponent s2 = new TextComponent(((LivingEntity) entity).getHealth() + "/" + ((LivingEntity) entity).getMaxHealth()).withStyle(textformatting);
+
+
+						mc.font.draw(stack, s, (int) 330, (int) 50, 0xe0e0e0);
+						mc.font.draw(stack, s2, (int) 330, (int) 60, 0xe0e0e0);
+					}
+
+				}
+				stack.popPose();
 			}
 		}
 	}
 
-	private static Entity checkEntity(LivingEntity user, double distance) {
+	private static Entity checkEntityWithNoBlockClip(LivingEntity user, double distance) {
 		Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isAlive();
 		Vec3 eyePos = user.getEyePosition(1.0F);
 		Vec3 lookVec = user.getLookAngle();
 		Vec3 distanceVec = eyePos.add(lookVec.scale(distance));
 		AABB playerBox = user.getBoundingBox().expandTowards(lookVec.scale(distance)).inflate(1.0D);
-		EntityHitResult traceResult = ProjectileUtil.getEntityHitResult(user, eyePos, distanceVec, playerBox, e, distance * distance);
-		if (traceResult == null || traceResult.getEntity() instanceof TamableAnimal && ((TamableAnimal) traceResult.getEntity()).isTame() && ((TamableAnimal) traceResult.getEntity()).isOwnedBy(user)) {
+
+		HitResult hitresult = user.level.clip(new ClipContext(eyePos, distanceVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
+
+		if (hitresult.getType() != HitResult.Type.MISS) {
+			distanceVec = hitresult.getLocation();
+		}
+
+		EntityHitResult traceResult = ProjectileUtil.getEntityHitResult(user.getLevel(), user, eyePos, distanceVec, playerBox, e);
+
+		if (traceResult == null) {
 			return null;
 		}
+
+
 		return traceResult.getEntity();
 	}
 }
