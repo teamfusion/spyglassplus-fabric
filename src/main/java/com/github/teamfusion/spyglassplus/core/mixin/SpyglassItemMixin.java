@@ -3,6 +3,7 @@ package com.github.teamfusion.spyglassplus.core.mixin;
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
+import com.github.teamfusion.spyglassplus.core.utils.SpyGlassVecUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -79,16 +80,18 @@ public class SpyglassItemMixin extends Item {
             }
             int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), stack);
             if (j > 0) {
-                Entity entity = checkEntity(user, 64.0D);
+                Entity entity = checkEntityWithNonClip(user, 64.0D);
                 MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
-                if (entity != null) {
+                if (entity instanceof LivingEntity) {
                     ((LivingEntity) entity).addEffect(effectInstance);
                 }
             }
             int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), stack);
             if (k > 0) {
                 Entity entity = checkEntity(user, 64.0D);
-                if (entity != null) {
+                MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
+                if (entity instanceof LivingEntity) {
+                    ((LivingEntity) entity).addEffect(effectInstance);
                     this.setInitiallyCommanded(true);
                 }
             }
@@ -118,24 +121,26 @@ public class SpyglassItemMixin extends Item {
                     List<IronGolem> nearbyIronGolems = world.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
                     List<SnowGolem> nearbySnowGolems = world.getEntitiesOfClass(SnowGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
                     List<Fox> nearbyFoxes = world.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-                    for (Wolf wolfEntity : nearbyWolves) {
-                        if (wolfEntity.isAlive() && entity != wolfEntity) {
-                            wolfEntity.setTarget((LivingEntity) entity);
+                    if (entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user)) {
+                        for (Wolf wolfEntity : nearbyWolves) {
+                            if (wolfEntity.isAlive() && entity != wolfEntity && entity instanceof LivingEntity) {
+                                wolfEntity.setTarget((LivingEntity) entity);
+                            }
                         }
-                    }
-                    for (IronGolem ironGolemEntity : nearbyIronGolems) {
-                        if (ironGolemEntity.isAlive() && entity != ironGolemEntity) {
-                            ironGolemEntity.setTarget((LivingEntity) entity);
+                        for (IronGolem ironGolemEntity : nearbyIronGolems) {
+                            if (ironGolemEntity.isAlive() && entity != ironGolemEntity && entity instanceof LivingEntity) {
+                                ironGolemEntity.setTarget((LivingEntity) entity);
+                            }
                         }
-                    }
-                    for (SnowGolem snowGolemEntity : nearbySnowGolems) {
-                        if (snowGolemEntity.isAlive() && entity != snowGolemEntity) {
-                            snowGolemEntity.setTarget((LivingEntity) entity);
+                        for (SnowGolem snowGolemEntity : nearbySnowGolems) {
+                            if (snowGolemEntity.isAlive() && entity != snowGolemEntity && entity instanceof LivingEntity) {
+                                snowGolemEntity.setTarget((LivingEntity) entity);
+                            }
                         }
-                    }
-                    for (Fox foxEntity : nearbyFoxes) {
-                        if (foxEntity.isAlive() && entity != foxEntity) {
-                            foxEntity.setTarget((LivingEntity) entity);
+                        for (Fox foxEntity : nearbyFoxes) {
+                            if (foxEntity.isAlive() && entity != foxEntity && entity instanceof LivingEntity) {
+                                foxEntity.setTarget((LivingEntity) entity);
+                            }
                         }
                     }
                 }
@@ -150,7 +155,20 @@ public class SpyglassItemMixin extends Item {
         Vec3 distanceVec = eyePos.add(lookVec.scale(distance));
         AABB playerBox = user.getBoundingBox().expandTowards(lookVec.scale(distance)).inflate(1.0D);
         EntityHitResult traceResult = ProjectileUtil.getEntityHitResult(user, eyePos, distanceVec, playerBox, e, distance * distance);
-        if (traceResult == null || traceResult.getEntity() instanceof TamableAnimal && ((TamableAnimal) traceResult.getEntity()).isTame() && ((TamableAnimal) traceResult.getEntity()).isOwnedBy(user)) {
+        if (traceResult == null) {
+            return null;
+        }
+        return traceResult.getEntity();
+    }
+
+    private static Entity checkEntityWithNonClip(LivingEntity user, double distance) {
+        Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isAlive();
+        Vec3 eyePos = user.getEyePosition(1.0F);
+        Vec3 lookVec = user.getLookAngle();
+        Vec3 distanceVec = eyePos.add(lookVec.scale(distance));
+        AABB playerBox = user.getBoundingBox().expandTowards(lookVec.scale(distance)).inflate(1.0D);
+        EntityHitResult traceResult = SpyGlassVecUtils.getEntityHitWithNonClipResult(user, eyePos, distanceVec, playerBox, e, distance * distance);
+        if (traceResult == null) {
             return null;
         }
         return traceResult.getEntity();
