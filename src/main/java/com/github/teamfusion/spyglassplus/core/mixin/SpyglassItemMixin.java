@@ -6,10 +6,7 @@ import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
@@ -122,25 +119,27 @@ public class SpyglassItemMixin extends Item {
                     List<IronGolem> nearbyIronGolems = world.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
                     List<SnowGolem> nearbySnowGolems = world.getEntitiesOfClass(SnowGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
                     List<Fox> nearbyFoxes = world.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-                    if (!(entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user))) {
-                        for (Wolf wolfEntity : nearbyWolves) {
-                            if (wolfEntity.isAlive() && entity != wolfEntity && entity instanceof LivingEntity) {
-                                wolfEntity.setTarget((LivingEntity) entity);
+                    if (entity != null && !(entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user))) {
+                        if (entity.getType() == EntityType.IRON_GOLEM && !((IronGolem) entity).isPlayerCreated() || entity.getType() != EntityType.IRON_GOLEM && entity.getType() != EntityType.SNOW_GOLEM) {
+                            for (Wolf wolfEntity : nearbyWolves) {
+                                if (wolfEntity.isAlive() && entity != wolfEntity && entity instanceof LivingEntity) {
+                                    wolfEntity.setTarget((LivingEntity) entity);
+                                }
                             }
-                        }
-                        for (IronGolem ironGolemEntity : nearbyIronGolems) {
-                            if (ironGolemEntity.isAlive() && entity != ironGolemEntity && entity instanceof LivingEntity) {
-                                ironGolemEntity.setTarget((LivingEntity) entity);
+                            for (IronGolem ironGolemEntity : nearbyIronGolems) {
+                                if (ironGolemEntity.isAlive() && entity != ironGolemEntity && entity instanceof LivingEntity) {
+                                    ironGolemEntity.setTarget((LivingEntity) entity);
+                                }
                             }
-                        }
-                        for (SnowGolem snowGolemEntity : nearbySnowGolems) {
-                            if (snowGolemEntity.isAlive() && entity != snowGolemEntity && entity instanceof LivingEntity) {
-                                snowGolemEntity.setTarget((LivingEntity) entity);
+                            for (SnowGolem snowGolemEntity : nearbySnowGolems) {
+                                if (snowGolemEntity.isAlive() && entity != snowGolemEntity && entity instanceof LivingEntity) {
+                                    snowGolemEntity.setTarget((LivingEntity) entity);
+                                }
                             }
-                        }
-                        for (Fox foxEntity : nearbyFoxes) {
-                            if (foxEntity.isAlive() && entity != foxEntity && entity instanceof LivingEntity) {
-                                foxEntity.setTarget((LivingEntity) entity);
+                            for (Fox foxEntity : nearbyFoxes) {
+                                if (foxEntity.isAlive() && entity != foxEntity && entity instanceof LivingEntity) {
+                                    foxEntity.setTarget((LivingEntity) entity);
+                                }
                             }
                         }
                     }
