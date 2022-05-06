@@ -1,5 +1,6 @@
 package com.github.teamfusion.spyglassplus.core.mixin;
 
+import com.github.teamfusion.spyglassplus.core.ISpyable;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +12,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
-public abstract class PlayerEntityMixin extends LivingEntity {
+public abstract class PlayerEntityMixin extends LivingEntity implements ISpyable {
+    private boolean command;
+
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
@@ -21,5 +24,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         if (!cir.getReturnValueZ() && this.isUsingItem() && this.getUseItem().is(SpyglassPlusItems.BINOCULARS.get())) {
             cir.setReturnValue(true);
         }
+    }
+
+    @Override
+    public void setCommand(boolean command) {
+        this.command = command;
+    }
+
+    @Override
+    public boolean isCommand() {
+        return this.command;
     }
 }

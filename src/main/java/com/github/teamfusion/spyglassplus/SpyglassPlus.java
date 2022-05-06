@@ -1,14 +1,18 @@
 package com.github.teamfusion.spyglassplus;
 
+import com.github.teamfusion.spyglassplus.client.ClientRegistrar;
 import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
+import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
@@ -41,6 +45,7 @@ public class SpyglassPlus {
 			.serverAcceptedVersions(NETWORK_PROTOCOL::equals)
 			.simpleChannel();
 
+
 	public SpyglassPlus() {
 		MinecraftForge.EVENT_BUS.register(this);
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -49,12 +54,17 @@ public class SpyglassPlus {
 		SpyglassPlusItems.ITEMS.register(bus);
 		log(Level.INFO, "Enhancing Spyglasses!");
 		this.setupMessages();
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientRegistrar::setup));
 	}
 
 	private void setupMessages() {
 		CHANNEL.messageBuilder(ScrutinyResetMessage.class, 0)
 				.encoder(ScrutinyResetMessage::serialize).decoder(ScrutinyResetMessage::deserialize)
 				.consumer(ScrutinyResetMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(TargetMessage.class, 1)
+				.encoder(TargetMessage::serialize).decoder(TargetMessage::deserialize)
+				.consumer(TargetMessage::handle)
 				.add();
 	}
 

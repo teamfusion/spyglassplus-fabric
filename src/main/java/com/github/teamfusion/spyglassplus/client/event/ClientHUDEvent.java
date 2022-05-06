@@ -63,8 +63,8 @@ public class ClientHUDEvent {
 						RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
 						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-						renderHeart(mc.gui, stack, (int) 355, (int) 60, true);
-						renderHeart(mc.gui, stack, (int) 355, (int) 60, false);
+						renderHeart(mc.gui, stack, (int) 353, (int) 60, true);
+						renderHeart(mc.gui, stack, (int) 353, (int) 60, false);
 					}
 				}
 				stack.popPose();
