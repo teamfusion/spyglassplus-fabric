@@ -51,11 +51,11 @@ public class ClientHUDEvent {
 						InventoryScreen.renderEntityInInventory(30, 200, 24, 0.0F, 0.0F, (LivingEntity) entity);
 
 
-						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE};
+						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.WHITE};
 
 						MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.health").withStyle(textformatting);
 
-						MutableComponent s2 = new TextComponent("* " + ((LivingEntity) entity).getHealth() / 2).withStyle(textformatting);
+						MutableComponent s2 = new TextComponent("(  * " + ((LivingEntity) entity).getHealth() / 2 + ")").withStyle(textformatting);
 
 
 						mc.font.draw(stack, s, (int) 350, (int) 50, 0xe0e0e0);
@@ -63,8 +63,8 @@ public class ClientHUDEvent {
 						RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
 						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-						renderHeart(mc.gui, stack, (int) 335, (int) 60, true);
-						renderHeart(mc.gui, stack, (int) 335, (int) 60, false);
+						renderHeart(mc.gui, stack, (int) 355, (int) 60, true);
+						renderHeart(mc.gui, stack, (int) 355, (int) 60, false);
 					}
 				}
 				stack.popPose();
