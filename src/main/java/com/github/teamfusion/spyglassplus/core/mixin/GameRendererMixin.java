@@ -68,7 +68,7 @@ public class GameRendererMixin {
                         }
                         finalValue -= currentZoom;
                     } else if (currentZoom > 0) {
-                        currentZoom += 0.01F;
+                        currentZoom = Mth.clamp(currentZoom - 0.01F, 0, 1);
                         finalValue -= currentZoom;
                     }
                     cir.setReturnValue(finalValue);
