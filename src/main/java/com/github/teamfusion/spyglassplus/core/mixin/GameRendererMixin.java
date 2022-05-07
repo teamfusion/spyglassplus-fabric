@@ -62,11 +62,13 @@ public class GameRendererMixin {
 
                     int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), player.getUseItem());
 
-                    if (currentZoom <= 1.0F) {
-                        currentZoom += 0.001F;
-                    }
-
                     if (player.isScoping() && j > 0 && checkEntityWithNoBlockClip(player, 64.0D) != null) {
+                        if (currentZoom <= 1.0F) {
+                            currentZoom += 0.001F;
+                        }
+                        finalValue -= currentZoom;
+                    } else if (currentZoom > 0) {
+                        currentZoom += 0.01F;
                         finalValue -= currentZoom;
                     }
                     cir.setReturnValue(finalValue);
