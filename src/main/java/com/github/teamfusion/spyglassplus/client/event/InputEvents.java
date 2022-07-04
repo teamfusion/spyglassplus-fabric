@@ -4,6 +4,7 @@ import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.client.ClientRegistrar;
 import com.github.teamfusion.spyglassplus.common.message.ResetTargetMessage;
 import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
+import com.github.teamfusion.spyglassplus.core.ISpyable;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -17,10 +18,6 @@ public class InputEvents {
 	private static boolean resetKeyPush;
 	private static boolean resetKeyPushed;
 
-	private static int keyCountDown;
-
-	private static int keyCooldown;
-
 	@SubscribeEvent
 	public static void onMouseClick(TickEvent.ClientTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
@@ -29,22 +26,9 @@ public class InputEvents {
 		onInput(mc);
 
 		if (mc.player.isScoping() && keyPush && !keyPushed) {
-			if (keyCountDown <= 60) {
-				keyCountDown += 1;
-				keyCooldown = 60;
-			} else {
+			SpyglassPlus.CHANNEL.sendToServer(new TargetMessage(mc.player.getId()));
+			keyPushed = true;
 
-				SpyglassPlus.CHANNEL.sendToServer(new TargetMessage(mc.player.getId()));
-				keyPushed = true;
-			}
-		} else {
-			if (keyCooldown > 0) {
-				keyCooldown -= 1;
-			}
-
-			if (keyCountDown > 0 && keyCooldown <= 0) {
-				keyCountDown -= 1;
-			}
 		}
 
 		if (!keyPush) {
@@ -53,20 +37,23 @@ public class InputEvents {
 	}
 
 	private static void onInput(Minecraft mc) {
-
-		if (mc.player.isScoping()) {
-			keyPush = ClientRegistrar.KEY_BIND_SPYGLASS_SET_TARGET.isDown();
-			resetKeyPush = ClientRegistrar.KEY_BIND_SPYGLASS_RESET_TARGET.isDown();
-
-			if (resetKeyPush && !resetKeyPushed) {
-				SpyglassPlus.CHANNEL.sendToServer(new ResetTargetMessage(mc.player.getId()));
-
-				resetKeyPushed = true;
+		if (mc.player instanceof ISpyable && mc.player.isScoping()) {
+			if (!((ISpyable) mc.player).isCommand()) {
+				keyPush = ClientRegistrar.KEY_BIND_SPYGLASS_SET_TARGET.isDown();
+			} else {
+				resetKeyPush = ClientRegistrar.KEY_BIND_SPYGLASS_RESET_TARGET.isDown();
 			}
+		}
 
-			if (!resetKeyPush) {
-				resetKeyPushed = false;
-			}
+
+		if (resetKeyPush && !resetKeyPushed) {
+			SpyglassPlus.CHANNEL.sendToServer(new ResetTargetMessage(mc.player.getId()));
+
+			resetKeyPushed = true;
+		}
+
+		if (!resetKeyPush) {
+			resetKeyPushed = false;
 		}
 	}
 }
