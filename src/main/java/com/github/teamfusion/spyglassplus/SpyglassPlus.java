@@ -21,11 +21,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.lang.reflect.Field;
 
 @Mod(SpyglassPlus.MOD_ID)
 public class SpyglassPlus {
@@ -45,18 +44,13 @@ public class SpyglassPlus {
 
 		public void fillItemList(NonNullList<ItemStack> items) {
 			super.fillItemList(items);
-			try {
-				for (Field f : SpyglassPlusEnchantments.class.getDeclaredFields()) {
-					Object obj = f.get(null);
-					if (obj instanceof Enchantment) {
-						Enchantment enchant = (Enchantment) obj;
-						if (enchant.isAllowedOnBooks()) {
-							items.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchant, enchant.getMaxLevel())));
-						}
+			for (RegistryObject<Enchantment> registryObject : SpyglassPlusEnchantments.ENCHANTMENTS.getEntries()) {
+				if (registryObject.get() instanceof Enchantment) {
+					Enchantment enchant = registryObject.get();
+					if (enchant.isAllowedOnBooks()) {
+						items.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchant, enchant.getMaxLevel())));
 					}
 				}
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
 			}
 		}
 	};
