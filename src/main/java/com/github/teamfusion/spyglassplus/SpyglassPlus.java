@@ -5,10 +5,14 @@ import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
 import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
+import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,6 +24,8 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.Field;
 
 @Mod(SpyglassPlus.MOD_ID)
 public class SpyglassPlus {
@@ -35,6 +41,23 @@ public class SpyglassPlus {
 		@Override
 		public ItemStack makeIcon() {
 			return new ItemStack(Items.SPYGLASS);
+		}
+
+		public void fillItemList(NonNullList<ItemStack> items) {
+			super.fillItemList(items);
+			try {
+				for (Field f : SpyglassPlusEnchantments.class.getDeclaredFields()) {
+					Object obj = f.get(null);
+					if (obj instanceof Enchantment) {
+						Enchantment enchant = (Enchantment) obj;
+						if (enchant.isAllowedOnBooks()) {
+							items.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchant, enchant.getMaxLevel())));
+						}
+					}
+				}
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	};
 
