@@ -99,12 +99,15 @@ public class SpyglassItemMixin extends Item {
 				SpyglassPlus.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) user), new ScrutinyResetMessage());
 			}
 		}
+		if (user instanceof ISpyable) {
+			if (((ISpyable) user).getCommandTick() > 0) {
+				((ISpyable) user).setCommandTick(((ISpyable) user).getCommandTick() - 1);
+			}
+		}
+
 		if (((Player) user).isScoping()) {
 			if (user instanceof ISpyable && ((ISpyable) user).isCommand()) {
 				if (this.initiallyCommanded) {
-					if (((ISpyable) user).getCommandTick() > 0) {
-						((ISpyable) user).setCommandTick(((ISpyable) user).getCommandTick() - 1);
-					}
 					if (((ISpyable) user).getCommandTick() == 0) {
 						this.setCommanded(false);
 						Entity entity = checkEntityWithNoBlockClip((LivingEntity) user, 64.0D);
