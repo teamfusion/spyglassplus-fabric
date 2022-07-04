@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -30,7 +31,8 @@ import java.util.function.Predicate;
 
 @Mod.EventBusSubscriber(modid = SpyglassPlus.MOD_ID, value = Dist.CLIENT)
 public class ClientHUDEvent {
-	private static final ResourceLocation TRIAL_ICON_LOCATION = new ResourceLocation("realms", "textures/gui/realms/trial_icon.png");
+	private static final ResourceLocation SCOPE_GUI_LOCATION = new ResourceLocation(SpyglassPlus.MOD_ID, "textures/gui/scope_gui.png");
+	private static final ResourceLocation SCOPE_GUI_ICON_LOCATION = new ResourceLocation(SpyglassPlus.MOD_ID, "textures/gui/scope_gui_icons.png");
 
 
 	@SubscribeEvent
@@ -48,8 +50,6 @@ public class ClientHUDEvent {
 					mc.font.draw(stack, entity.getDisplayName(), (int) 20, (int) 50, 0xe0e0e0);
 
 					if (entity instanceof LivingEntity) {
-						InventoryScreen.renderEntityInInventory(30, 200, 24, 0.0F, 0.0F, (LivingEntity) entity);
-
 
 						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.WHITE};
 
@@ -60,11 +60,28 @@ public class ClientHUDEvent {
 
 						mc.font.draw(stack, s, (int) 350, (int) 50, 0xe0e0e0);
 						mc.font.draw(stack, s2, (int) 350, (int) 60, 0xe0e0e0);
+						RenderSystem.setShader(GameRenderer::getPositionTexShader);
 						RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
-						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
 						renderHeart(mc.gui, stack, (int) 353, (int) 60, true);
 						renderHeart(mc.gui, stack, (int) 353, (int) 60, false);
+
+						//entity and gui
+						//idk why I should have to double
+						stack.pushPose();
+						stack.scale(0.5F, 0.5F, 0.5F);
+						RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+						RenderSystem.setShaderTexture(0, SCOPE_GUI_LOCATION);
+						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+						mc.gui.blit(stack, 0, 130, 0, 0, 64 * 2, 128 * 2);
+						stack.popPose();
+						stack.pushPose();
+						stack.scale(0.65F, 0.65F, 0.65F);
+						RenderSystem.setShaderTexture(0, SCOPE_GUI_ICON_LOCATION);
+						mc.gui.blit(stack, 32, 100, 32 * (5 - k) * 1 - 2, 0, 32 * 1, 16 * 2);
+						stack.popPose();
+						InventoryScreen.renderEntityInInventory(30, 200, 20, 0.0F, 0.0F, (LivingEntity) entity);
+
 					}
 				}
 				stack.popPose();
