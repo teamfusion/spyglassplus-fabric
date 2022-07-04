@@ -33,7 +33,6 @@ import java.util.function.Predicate;
 
 @Mixin(SpyglassItem.class)
 public class SpyglassItemMixin extends Item {
-	private int commandTicks = 100;
 	private boolean isCommanded = false;
 	private boolean initiallyCommanded = false;
 
@@ -59,13 +58,6 @@ public class SpyglassItemMixin extends Item {
 		this.isCommanded = commanded;
 	}
 
-	public void setCommandTicks(int commandTicks) {
-		this.commandTicks = commandTicks;
-	}
-
-	public int getCommandTicks() {
-		return this.commandTicks;
-	}
 
 	public void setInitiallyCommanded(boolean initiallyCommanded) {
 		this.initiallyCommanded = initiallyCommanded;
@@ -107,55 +99,60 @@ public class SpyglassItemMixin extends Item {
 				SpyglassPlus.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) user), new ScrutinyResetMessage());
 			}
 		}
+		if (((Player) user).isScoping()) {
+			if (user instanceof ISpyable && ((ISpyable) user).isCommand()) {
+				if (this.initiallyCommanded) {
+					if (((ISpyable) user).getCommandTick() > 0) {
+						((ISpyable) user).setCommandTick(((ISpyable) user).getCommandTick() - 1);
+					}
+					if (((ISpyable) user).getCommandTick() == 0) {
+						this.setCommanded(false);
+						Entity entity = checkEntityWithNoBlockClip((LivingEntity) user, 64.0D);
+						AABB box = new AABB(user.blockPosition()).inflate(6.0D);
+						List<Wolf> nearbyWolves = world.getEntitiesOfClass(Wolf.class, box, TamableAnimal::isTame);
+						List<IronGolem> nearbyIronGolems = world.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+						List<SnowGolem> nearbySnowGolems = world.getEntitiesOfClass(SnowGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+						List<Fox> nearbyFoxes = world.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+						List<Axolotl> nearbyAxolotl = world.getEntitiesOfClass(Axolotl.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
-		if (this.initiallyCommanded) {
-			this.commandTicks--;
-			if (this.getCommandTicks() == 0) {
-				this.setCommanded(false);
-				Entity entity = checkEntityWithNoBlockClip((LivingEntity) user, 64.0D);
-				AABB box = new AABB(user.blockPosition()).inflate(6.0D);
-				List<Wolf> nearbyWolves = world.getEntitiesOfClass(Wolf.class, box, TamableAnimal::isTame);
-				List<IronGolem> nearbyIronGolems = world.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-				List<SnowGolem> nearbySnowGolems = world.getEntitiesOfClass(SnowGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-				List<Fox> nearbyFoxes = world.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-				List<Axolotl> nearbyAxolotl = world.getEntitiesOfClass(Axolotl.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+						if (entity != null && !(entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user))) {
+							if (entity.getType() == EntityType.IRON_GOLEM && !((IronGolem) entity).isPlayerCreated() || entity.getType() != EntityType.IRON_GOLEM && entity.getType() != EntityType.SNOW_GOLEM) {
 
-				if (entity != null && !(entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user))) {
-					if (entity.getType() == EntityType.IRON_GOLEM && !((IronGolem) entity).isPlayerCreated() || entity.getType() != EntityType.IRON_GOLEM && entity.getType() != EntityType.SNOW_GOLEM) {
-						if (user instanceof ISpyable && ((ISpyable) user).isCommand())
-							this.setCommanded(true);
-						this.setInitiallyCommanded(false);
-						this.setCommandTicks(100);
-						if (this.isCommanded()) {
-							for (Wolf wolfEntity : nearbyWolves) {
-								if (wolfEntity.isAlive() && entity != wolfEntity && entity instanceof LivingEntity) {
-									wolfEntity.setTarget((LivingEntity) entity);
-								}
-							}
-							for (IronGolem ironGolemEntity : nearbyIronGolems) {
-								if (ironGolemEntity.isAlive() && entity != ironGolemEntity && entity instanceof LivingEntity) {
-									ironGolemEntity.setTarget((LivingEntity) entity);
-								}
-							}
-							for (SnowGolem snowGolemEntity : nearbySnowGolems) {
-								if (snowGolemEntity.isAlive() && entity != snowGolemEntity && entity instanceof LivingEntity) {
-									snowGolemEntity.setTarget((LivingEntity) entity);
-								}
-							}
-							for (Fox foxEntity : nearbyFoxes) {
-								if (foxEntity.isAlive() && entity != foxEntity && entity instanceof LivingEntity) {
-									foxEntity.setTarget((LivingEntity) entity);
+								this.setCommanded(true);
+								this.setInitiallyCommanded(false);
+								((ISpyable) user).setCommandTick(100);
+								if (this.isCommanded()) {
+									for (Wolf wolfEntity : nearbyWolves) {
+										if (wolfEntity.isAlive() && entity != wolfEntity && entity instanceof LivingEntity) {
+											wolfEntity.setTarget((LivingEntity) entity);
+										}
+									}
+									for (IronGolem ironGolemEntity : nearbyIronGolems) {
+										if (ironGolemEntity.isAlive() && entity != ironGolemEntity && entity instanceof LivingEntity) {
+											ironGolemEntity.setTarget((LivingEntity) entity);
+										}
+									}
+									for (SnowGolem snowGolemEntity : nearbySnowGolems) {
+										if (snowGolemEntity.isAlive() && entity != snowGolemEntity && entity instanceof LivingEntity) {
+											snowGolemEntity.setTarget((LivingEntity) entity);
+										}
+									}
+									for (Fox foxEntity : nearbyFoxes) {
+										if (foxEntity.isAlive() && entity != foxEntity && entity instanceof LivingEntity) {
+											foxEntity.setTarget((LivingEntity) entity);
+										}
+									}
+
+									for (Axolotl axolotlEntity : nearbyAxolotl) {
+										if (axolotlEntity.isAlive() && entity != axolotlEntity && entity instanceof LivingEntity) {
+											axolotlEntity.setTarget((LivingEntity) entity);
+										}
+									}
 								}
 							}
 
-							for (Axolotl axolotlEntity : nearbyAxolotl) {
-								if (axolotlEntity.isAlive() && entity != axolotlEntity && entity instanceof LivingEntity) {
-									axolotlEntity.setTarget((LivingEntity) entity);
-								}
-							}
 						}
 					}
-
 				}
 			}
 		}

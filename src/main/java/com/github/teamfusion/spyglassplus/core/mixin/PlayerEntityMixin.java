@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements ISpyable {
     private static final EntityDataAccessor<Boolean> DATA_COMMAND_ID = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DATA_COMMAND_TICK_ID = SynchedEntityData.defineId(Player.class, EntityDataSerializers.INT);
 
 
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
@@ -27,6 +28,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements ISpyable
     @Inject(method = "defineSynchedData", at = @At("HEAD"))
     protected void defineSynchedData(CallbackInfo callbackInfo) {
         this.entityData.define(DATA_COMMAND_ID, false);
+        this.entityData.define(DATA_COMMAND_TICK_ID, 0);
     }
 
     @Inject(method = "isScoping", at = @At("RETURN"), cancellable = true)
@@ -44,5 +46,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements ISpyable
     @Override
     public boolean isCommand() {
         return this.entityData.get(DATA_COMMAND_ID);
+    }
+
+    @Override
+    public void setCommandTick(int tick) {
+        this.entityData.set(DATA_COMMAND_TICK_ID, tick);
+    }
+
+    @Override
+    public int getCommandTick() {
+        return this.entityData.get(DATA_COMMAND_TICK_ID);
     }
 }

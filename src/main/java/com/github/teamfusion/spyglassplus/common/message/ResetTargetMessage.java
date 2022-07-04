@@ -2,6 +2,7 @@ package com.github.teamfusion.spyglassplus.common.message;
 
 import com.github.teamfusion.spyglassplus.core.ISpyable;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Fox;
@@ -17,21 +18,31 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ResetTargetMessage {
-	public ResetTargetMessage() {
+
+	private int entityId;
+
+	public ResetTargetMessage(Entity entity) {
+		this.entityId = entity.getId();
 	}
 
+	public ResetTargetMessage(int entityId) {
+		this.entityId = entityId;
+	}
+
+
 	public void serialize(FriendlyByteBuf buffer) {
+		buffer.writeInt(this.entityId);
 	}
 
 	public static ResetTargetMessage deserialize(FriendlyByteBuf buffer) {
-		return new ResetTargetMessage();
+		return new ResetTargetMessage(buffer.readInt());
 	}
 
 	public static boolean handle(ResetTargetMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
 		NetworkEvent.Context context = contextSupplier.get();
 
 		context.enqueueWork(() -> {
-			Player player = context.getSender();
+			Player player = (Player) context.getSender().level.getEntity(message.entityId);
 
 			if (player == null) return;
 

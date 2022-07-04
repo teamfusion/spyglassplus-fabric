@@ -1,6 +1,7 @@
 package com.github.teamfusion.spyglassplus;
 
 import com.github.teamfusion.spyglassplus.client.ClientRegistrar;
+import com.github.teamfusion.spyglassplus.common.message.ResetTargetMessage;
 import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
 import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
@@ -82,6 +83,10 @@ public class SpyglassPlus {
 		CHANNEL.messageBuilder(TargetMessage.class, 1)
 				.encoder(TargetMessage::serialize).decoder(TargetMessage::deserialize)
 				.consumer(TargetMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(ResetTargetMessage.class, 2)
+				.encoder(ResetTargetMessage::serialize).decoder(ResetTargetMessage::deserialize)
+				.consumer(ResetTargetMessage::handle)
 				.add();
 	}
 
