@@ -7,7 +7,10 @@ import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
@@ -119,8 +122,6 @@ public class SpyglassItemMixin extends Item {
 						List<Axolotl> nearbyAxolotl = world.getEntitiesOfClass(Axolotl.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
 						if (entity != null && !(entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame() && ((TamableAnimal) entity).isOwnedBy((LivingEntity) user))) {
-							if (entity.getType() == EntityType.IRON_GOLEM && !((IronGolem) entity).isPlayerCreated() || entity.getType() != EntityType.IRON_GOLEM && entity.getType() != EntityType.SNOW_GOLEM) {
-
 								this.setCommanded(true);
 								this.setInitiallyCommanded(false);
 								((ISpyable) user).setCommandTick(100);
@@ -141,18 +142,18 @@ public class SpyglassItemMixin extends Item {
 										}
 									}
 									for (Fox foxEntity : nearbyFoxes) {
-										if (foxEntity.isAlive() && entity != foxEntity && entity instanceof LivingEntity) {
+										if (foxEntity.isAlive() && entity != foxEntity && !(entity instanceof Fox) && entity instanceof LivingEntity) {
 											foxEntity.setTarget((LivingEntity) entity);
 										}
 									}
 
 									for (Axolotl axolotlEntity : nearbyAxolotl) {
-										if (axolotlEntity.isAlive() && entity != axolotlEntity && entity instanceof LivingEntity) {
+										if (axolotlEntity.isAlive() && entity != axolotlEntity && !(entity instanceof Axolotl) && entity instanceof LivingEntity) {
 											axolotlEntity.setTarget((LivingEntity) entity);
 										}
 									}
+									((ISpyable) user).setCommand(false);
 								}
-							}
 
 						}
 					}
