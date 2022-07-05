@@ -7,10 +7,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class ClientRegistrar {
 	public static final KeyMapping KEY_BIND_SPYGLASS_SET_TARGET = new KeyMapping(
-			"key.spyglassplus.set_target", InputConstants.Type.MOUSE, 0, "key.categories.gameplay");
+			"key.spyglassplus.set_target", InputConstants.Type.KEYSYM, 75, "key.categories.gameplay");
 
 	public static final KeyMapping KEY_BIND_SPYGLASS_RESET_TARGET = new KeyMapping(
-			"key.spyglassplus.reset_target", InputConstants.Type.MOUSE, 0, "key.categories.gameplay");
+			"key.spyglassplus.reset_target", InputConstants.Type.KEYSYM, 76, "key.categories.gameplay");
 
 
 	public static void setup(FMLCommonSetupEvent event) {
