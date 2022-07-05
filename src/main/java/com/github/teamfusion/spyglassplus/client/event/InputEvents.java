@@ -37,11 +37,8 @@ public class InputEvents {
 
 	private static void onInput(Minecraft mc) {
 		if (mc.player instanceof ISpyable && mc.player.isScoping()) {
-			if (!((ISpyable) mc.player).isCommand()) {
-				keyPush = ClientRegistrar.KEY_BIND_SPYGLASS_SET_TARGET.isDown();
-			} else {
-				resetKeyPush = ClientRegistrar.KEY_BIND_SPYGLASS_RESET_TARGET.isDown();
-			}
+			keyPush = ClientRegistrar.KEY_BIND_SPYGLASS_SET_TARGET.isDown();
+			resetKeyPush = ClientRegistrar.KEY_BIND_SPYGLASS_RESET_TARGET.isDown();
 		}
 
 
