@@ -1,6 +1,7 @@
 package com.github.teamfusion.spyglassplus.client.event;
 
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
+import com.github.teamfusion.spyglassplus.client.ClientRegistrar;
 import com.github.teamfusion.spyglassplus.common.message.ResetTargetMessage;
 import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.ISpyable;
@@ -16,8 +17,6 @@ public class InputEvents {
 	private static boolean keyPushed;
 	private static boolean resetKeyPush;
 	private static boolean resetKeyPushed;
-
-	private static int cooldown;
 	@SubscribeEvent
 	public static void onMouseClick(TickEvent.ClientTickEvent event) {
 		Minecraft mc = Minecraft.getInstance();
@@ -37,21 +36,11 @@ public class InputEvents {
 	}
 
 	private static void onInput(Minecraft mc) {
-		if (cooldown > 0) {
-			cooldown -= 1;
-		} else {
-			if (mc.player instanceof ISpyable && mc.player.isScoping()) {
-				if (!((ISpyable) mc.player).isCommand()) {
-					if (Minecraft.getInstance().options.keyAttack.isDown()) {
-						keyPush = true;
-						cooldown = 20;
-					}
-				} else {
-					if (Minecraft.getInstance().options.keyAttack.isDown()) {
-						resetKeyPush = true;
-						cooldown = 20;
-					}
-				}
+		if (mc.player instanceof ISpyable && mc.player.isScoping()) {
+			if (!((ISpyable) mc.player).isCommand()) {
+				keyPush = ClientRegistrar.KEY_BIND_SPYGLASS_SET_TARGET.isDown();
+			} else {
+				resetKeyPush = ClientRegistrar.KEY_BIND_SPYGLASS_RESET_TARGET.isDown();
 			}
 		}
 
