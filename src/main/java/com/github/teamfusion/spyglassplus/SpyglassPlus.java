@@ -48,9 +48,7 @@ public class SpyglassPlus {
 			for (RegistryObject<Enchantment> registryObject : SpyglassPlusEnchantments.ENCHANTMENTS.getEntries()) {
 				if (registryObject.get() instanceof Enchantment) {
 					Enchantment enchant = registryObject.get();
-					if (enchant.isAllowedOnBooks()) {
-						items.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchant, enchant.getMaxLevel())));
-					}
+					items.add(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchant, enchant.getMaxLevel())));
 				}
 			}
 		}
