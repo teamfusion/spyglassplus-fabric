@@ -117,7 +117,7 @@ public class ClientHUDEvent {
 						if (((LivingEntity) entity).getAttribute(Attributes.ATTACK_DAMAGE) != null) {
 							MutableComponent s3 = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.damage").withStyle(textformatting);
 
-							MutableComponent s4 = new TextComponent("(  * " + ((LivingEntity) entity).getAttributeBaseValue(Attributes.ATTACK_DAMAGE) / 2 + ")").withStyle(textformatting);
+							MutableComponent s4 = new TextComponent("(  * " + ((LivingEntity) entity).getAttributeValue(Attributes.ATTACK_DAMAGE) / 2 + ")").withStyle(textformatting);
 							mc.font.draw(stack, s3, (int) 20, (int) -50, 0xe0e0e0);
 							mc.font.draw(stack, s4, (int) 20, (int) -40, 0xe0e0e0);
 							RenderSystem.setShader(GameRenderer::getPositionTexShader);
