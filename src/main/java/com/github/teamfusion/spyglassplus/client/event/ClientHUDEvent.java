@@ -69,7 +69,7 @@ public class ClientHUDEvent {
 			topPos = (height) / 2;
 		}
 
-		if (eyetick < 30 * 20) {
+		if (eyetick < 30 * 20 * 20) {
 			++eyetick;
 		} else {
 			if (isEyeBlink) {
@@ -94,7 +94,7 @@ public class ClientHUDEvent {
 				stack.translate((double) leftPos, (double) topPos, 0.0D);
 				Entity entity = checkEntityWithNoBlockClip(mc.player, 64.0D);
 				if (entity != null) {
-					mc.font.draw(stack, entity.getDisplayName(), (int) -260, (int) -100, 0xe0e0e0);
+					mc.font.draw(stack, entity.getDisplayName(), (int) -250 - widthOffset, (int) -100, 0xe0e0e0);
 
 					if (entity instanceof LivingEntity) {
 
@@ -158,10 +158,15 @@ public class ClientHUDEvent {
 						RenderSystem.setShaderTexture(0, SCOPE_GUI_LOCATION);
 						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 						mc.gui.blit(stack, -358 - widthOffset, -80, 0, 0, 64 * 2, 124 * 2);
-						mc.gui.blit(stack, -330 - widthOffset, -80, 128, (32 * eyePhase * 1), 64, 32);
-						//render entity
+						mc.gui.blit(stack, -326 - widthOffset, -80, 128, (32 * eyePhase * 1), 64, 32);
 						stack.popPose();
-						InventoryScreen.renderEntityInInventory(leftPos + -230 - widthOffset, topPos + 90, 20, 0.0F, 0.0F, (LivingEntity) entity);
+						//render entity
+						stack.pushPose();
+						float entityWidth = entity.getDimensions(entity.getPose()).width;
+						float entityHeight = entity.getDimensions(entity.getPose()).height;
+
+						InventoryScreen.renderEntityInInventory(leftPos + -220 - widthOffset, topPos + 90, (int) (25 * (1 / entityWidth)), 0.0F, 0.0F, (LivingEntity) entity);
+						stack.popPose();
 					}
 				}
 				stack.popPose();
