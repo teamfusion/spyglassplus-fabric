@@ -11,5 +11,6 @@
   "item.spyglassplus.binoculars": "Binoculars",
   "_comment4": "Info",
   "spyglassplus.spyglass.info.health": "Health",
-  "spyglassplus.spyglass.info.damage": "Damage"
+  "spyglassplus.spyglass.info.damage": "Damage",
+  "spyglassplus.spyglass.info.cannot_render": "It won't work without Window size is 16;9. try to rescale it."
 }
