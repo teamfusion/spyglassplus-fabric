@@ -201,6 +201,9 @@ public class ClientHUDEvent {
 		}
 	}
 
+	/*
+	 * This method make not weired look and isometric view
+	 */
 	private static void renderEntity(int p_98851_, int p_98852_, int p_98853_, float p_98854_, float p_98855_, LivingEntity p_98856_) {
 		float f = (float) Math.atan((double) (p_98854_ / 40.0F));
 		float f1 = (float) Math.atan((double) (p_98855_ / 40.0F));
