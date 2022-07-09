@@ -76,7 +76,7 @@ public class ClientHUDEvent {
 
 		double guiScale = event.getWindow().getGuiScale();
 		int sidebarWidth = 256;
-		float sidebarSizeScale = (float) ((64 * guiScale) / Math.min(sidebarWidth, 64 * guiScale));
+		float sidebarScale = (float) ((64 * guiScale) / Math.min(sidebarWidth, 64 * guiScale));
 
 		if (eyetick < 30 * 20 * 20) {
 			++eyetick;
@@ -97,7 +97,7 @@ public class ClientHUDEvent {
 		}
 
 		int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.DISCOVERY.get(), mc.player.getUseItem());
-		if (k > 0 && sidebarSizeScale > 0) {
+		if (k > 0 && sidebarScale > 0) {
 			if (newDelta > ratio / 1.25F) {
 
 				if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
@@ -107,83 +107,83 @@ public class ClientHUDEvent {
 					if (entity != null) {
 						if (entity instanceof LivingEntity) {
 
-							ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.WHITE};
+						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.WHITE};
 
-							MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.health").withStyle(textformatting);
+						MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.health").withStyle(textformatting);
 
-							MutableComponent s2 = new TextComponent("(  * " + ((LivingEntity) entity).getHealth() / 2 + ")").withStyle(textformatting);
+						MutableComponent s2 = new TextComponent("(  * " + ((LivingEntity) entity).getHealth() / 2 + ")").withStyle(textformatting);
 
-							/*
-							 * right side render start
-							 */
-							stack.pushPose();
+						/*
+						 * right side render start
+						 */
+						stack.pushPose();
 
-							//set right translate
-							stack.translate((double) -leftPos + rightPos, (double) 0.0F, 0.0D);
-							stack.scale(sidebarSizeScale, sidebarSizeScale, sidebarSizeScale);
-							mc.font.draw(stack, s, (int) 20, (int) -70, 0xe0e0e0);
-							mc.font.draw(stack, s2, (int) 20, (int) -60, 0xe0e0e0);
+						//set right translate
+						stack.translate((double) -leftPos + rightPos, (double) 0.0F, 0.0D);
+						stack.scale(sidebarScale, sidebarScale, sidebarScale);
+						mc.font.draw(stack, s, (int) 20, (int) -70, 0xe0e0e0);
+						mc.font.draw(stack, s2, (int) 20, (int) -60, 0xe0e0e0);
+						RenderSystem.setShader(GameRenderer::getPositionTexShader);
+						RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
+
+						renderHeart(mc.gui, stack, 23, (int) -60, true);
+						renderHeart(mc.gui, stack, 23, (int) -60, false);
+
+						//attack damage
+						if (((LivingEntity) entity).getAttribute(Attributes.ATTACK_DAMAGE) != null) {
+							MutableComponent s3 = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.damage").withStyle(textformatting);
+
+							MutableComponent s4 = new TextComponent("(  * " + ((LivingEntity) entity).getAttributeValue(Attributes.ATTACK_DAMAGE) / 2 + ")").withStyle(textformatting);
+							mc.font.draw(stack, s3, (int) 20, (int) -50, 0xe0e0e0);
+							mc.font.draw(stack, s4, (int) 20, (int) -40, 0xe0e0e0);
 							RenderSystem.setShader(GameRenderer::getPositionTexShader);
 							RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
 
-							renderHeart(mc.gui, stack, 23, (int) -60, true);
-							renderHeart(mc.gui, stack, 23, (int) -60, false);
+							renderHeart(mc.gui, stack, (int) 23, (int) -40, true);
+							renderHeart(mc.gui, stack, (int) 23, (int) -40, false);
+						}
 
-							//attack damage
-							if (((LivingEntity) entity).getAttribute(Attributes.ATTACK_DAMAGE) != null) {
-								MutableComponent s3 = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.damage").withStyle(textformatting);
+						if (k > 1) {
+							Collection<MobEffectInstance> collection = ((LivingEntity) entity).getActiveEffects();
 
-								MutableComponent s4 = new TextComponent("(  * " + ((LivingEntity) entity).getAttributeValue(Attributes.ATTACK_DAMAGE) / 2 + ")").withStyle(textformatting);
-								mc.font.draw(stack, s3, (int) 20, (int) -50, 0xe0e0e0);
-								mc.font.draw(stack, s4, (int) 20, (int) -40, 0xe0e0e0);
-								RenderSystem.setShader(GameRenderer::getPositionTexShader);
-								RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
-
-								renderHeart(mc.gui, stack, (int) 23, (int) -40, true);
-								renderHeart(mc.gui, stack, (int) 23, (int) -40, false);
-							}
-
-							if (k > 1) {
-								Collection<MobEffectInstance> collection = ((LivingEntity) entity).getActiveEffects();
-
-								if (!collection.isEmpty()) {
-									RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-									int k2 = 33;
-									if (collection.size() > 5) {
-										k2 = 132 / (collection.size() - 1);
-									}
-
-
-									Iterable<MobEffectInstance> iterable = collection.stream().filter(net.minecraftforge.client.ForgeHooksClient::shouldRenderEffect).sorted().collect(java.util.stream.Collectors.toList());
-									renderIcons(stack, 23, -(k2 - 8), 6, iterable);
+							if (!collection.isEmpty()) {
+								RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+								int k2 = 33;
+								if (collection.size() > 5) {
+									k2 = 132 / (collection.size() - 1);
 								}
+
+
+								Iterable<MobEffectInstance> iterable = collection.stream().filter(net.minecraftforge.client.ForgeHooksClient::shouldRenderEffect).sorted().collect(java.util.stream.Collectors.toList());
+								renderIcons(stack, 23, -(k2 - 8), 6, iterable);
 							}
+						}
 
-							//reset
-							stack.popPose();
-							/*
-							 * right side render finished
-							 */
+						//reset
+						stack.popPose();
+						/*
+						 * right side render finished
+						 */
 
-							//entity and gui
-							//idk why I should have to double
-							stack.pushPose();
-							stack.scale(sidebarSizeScale * 0.75F, sidebarSizeScale * 0.75F, sidebarSizeScale * 0.75F);
-							RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-							RenderSystem.setShaderTexture(0, SCOPE_GUI_LOCATION);
-							RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-							mc.gui.blit(stack, -98, -80, 0, 0, 64 * 2, 124 * 2);
-							mc.gui.blit(stack, -66, -80, 128, (32 * eyePhase * 1), 64, 32);
-							stack.popPose();
-							//render entity
-							stack.pushPose();
-							float entityWidth = entity.getDimensions(entity.getPose()).width;
-							float entityHeight = entity.getDimensions(entity.getPose()).height;
+						//entity and gui
+						//idk why I should have to double
+						stack.pushPose();
+						stack.scale(sidebarScale * 0.75F, sidebarScale * 0.75F, sidebarScale * 0.75F);
+						RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+						RenderSystem.setShaderTexture(0, SCOPE_GUI_LOCATION);
+						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+						mc.gui.blit(stack, -98, -80, 0, 0, 64 * 2, 124 * 2);
+						mc.gui.blit(stack, -66, -80, 128, (32 * eyePhase * 1), 64, 32);
+						stack.popPose();
+						//render entity
+						stack.pushPose();
+						float entityWidth = entity.getDimensions(entity.getPose()).width;
+						float entityHeight = entity.getDimensions(entity.getPose()).height;
 
 							renderEntity(leftPos - 25, topPos + 90, (int) (25 / entityWidth), 270.0F, -270.0F, (LivingEntity) entity);
 							stack.popPose();
 						}
-						stack.scale(sidebarSizeScale, sidebarSizeScale, sidebarSizeScale);
+						stack.scale(sidebarScale, sidebarScale, sidebarScale);
 						mc.font.draw(stack, entity.getDisplayName(), (int) -43, (int) -30, 0x212121);
 					}
 					stack.popPose();
