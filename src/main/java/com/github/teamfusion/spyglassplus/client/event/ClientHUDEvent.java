@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -59,13 +60,15 @@ public class ClientHUDEvent {
 
 		Minecraft mc = Minecraft.getInstance();
 
-		if (event.getWindow() != null) {
-			width = event.getWindow().getGuiScaledWidth();
-			height = event.getWindow().getGuiScaledHeight();
-			leftPos = (int) ((width) * 0.15F);
-			rightPos = (int) ((width) / 1.25F);
-			topPos = (height) / 2;
-		}
+		width = event.getWindow().getGuiScaledWidth();
+		height = event.getWindow().getGuiScaledHeight();
+		leftPos = (int) ((width) * 0.15F);
+		rightPos = (int) ((width) / 1.25F);
+		topPos = (height) / 2;
+
+		double guiScale = event.getWindow().getGuiScale();
+		int sidebarWidth = 256;
+		float sidebarScale = (float) ((64 * guiScale) / Math.min(sidebarWidth, 64 * guiScale));
 
 		if (eyetick < 30 * 20 * 20) {
 			++eyetick;
@@ -86,7 +89,7 @@ public class ClientHUDEvent {
 		}
 
 		int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.DISCOVERY.get(), mc.player.getUseItem());
-		if (k > 0) {
+		if (k > 0 && sidebarScale > 0) {
 			if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
 				stack.pushPose();
 				stack.translate((double) leftPos, (double) topPos, 0.0D);
@@ -107,6 +110,7 @@ public class ClientHUDEvent {
 
 						//set right translate
 						stack.translate((double) -leftPos + rightPos, (double) 0.0F, 0.0D);
+						stack.scale(sidebarScale, sidebarScale, sidebarScale);
 						mc.font.draw(stack, s, (int) 20, (int) -70, 0xe0e0e0);
 						mc.font.draw(stack, s2, (int) 20, (int) -60, 0xe0e0e0);
 						RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -154,7 +158,7 @@ public class ClientHUDEvent {
 						//entity and gui
 						//idk why I should have to double
 						stack.pushPose();
-						stack.scale(0.75F, 0.75F, 0.75F);
+						stack.scale(sidebarScale * 0.75F, sidebarScale * 0.75F, sidebarScale * 0.75F);
 						RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 						RenderSystem.setShaderTexture(0, SCOPE_GUI_LOCATION);
 						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -169,10 +173,12 @@ public class ClientHUDEvent {
 						InventoryScreen.renderEntityInInventory(leftPos - 25, topPos + 90, (int) (25 * (1 / entityWidth)), 0.0F, 0.0F, (LivingEntity) entity);
 						stack.popPose();
 					}
+					stack.scale(sidebarScale, sidebarScale, sidebarScale);
 					mc.font.draw(stack, entity.getDisplayName(), (int) -45, (int) -100, 0xe0e0e0);
-
 				}
 				stack.popPose();
+
+				RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 			}
 		}
 	}
