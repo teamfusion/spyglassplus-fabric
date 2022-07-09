@@ -52,7 +52,6 @@ public class ClientHUDEvent {
 	private static int width;
 	private static int height;
 
-	private static int widthOffset;
 
 	@SubscribeEvent
 	public static void renderHudEvent(RenderGameOverlayEvent.Post event) {
@@ -60,12 +59,11 @@ public class ClientHUDEvent {
 
 		Minecraft mc = Minecraft.getInstance();
 
-		if (mc.getWindow() != null) {
-			width = mc.getWindow().getGuiScaledWidth() / mc.getWindow().getScreenWidth();
-			height = mc.getWindow().getGuiScaledHeight();
-			widthOffset = (width / 800);
-			leftPos = (int) ((width) / 1.5);
-			rightPos = (int) ((width) / 0.5);
+		if (event.getWindow() != null) {
+			width = event.getWindow().getGuiScaledWidth();
+			height = event.getWindow().getGuiScaledHeight();
+			leftPos = (int) ((width) * 0.15F);
+			rightPos = (int) ((width) / 1.25F);
 			topPos = (height) / 2;
 		}
 
@@ -94,8 +92,6 @@ public class ClientHUDEvent {
 				stack.translate((double) leftPos, (double) topPos, 0.0D);
 				Entity entity = checkEntityWithNoBlockClip(mc.player, 64.0D);
 				if (entity != null) {
-					mc.font.draw(stack, entity.getDisplayName(), (int) 50 + widthOffset, (int) -100, 0xe0e0e0);
-
 					if (entity instanceof LivingEntity) {
 
 						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.WHITE};
@@ -111,26 +107,26 @@ public class ClientHUDEvent {
 
 						//set right translate
 						stack.translate((double) -leftPos + rightPos, (double) 0.0F, 0.0D);
-						mc.font.draw(stack, s, (int) 450 + widthOffset, (int) -70, 0xe0e0e0);
-						mc.font.draw(stack, s2, (int) 450 + widthOffset, (int) -60, 0xe0e0e0);
+						mc.font.draw(stack, s, (int) 20, (int) -70, 0xe0e0e0);
+						mc.font.draw(stack, s2, (int) 20, (int) -60, 0xe0e0e0);
 						RenderSystem.setShader(GameRenderer::getPositionTexShader);
 						RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
 
-						renderHeart(mc.gui, stack, 453 + widthOffset, (int) -60, true);
-						renderHeart(mc.gui, stack, 453 + widthOffset, (int) -60, false);
+						renderHeart(mc.gui, stack, 23, (int) -60, true);
+						renderHeart(mc.gui, stack, 23, (int) -60, false);
 
 						//attack damage
 						if (((LivingEntity) entity).getAttribute(Attributes.ATTACK_DAMAGE) != null) {
 							MutableComponent s3 = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.damage").withStyle(textformatting);
 
 							MutableComponent s4 = new TextComponent("(  * " + ((LivingEntity) entity).getAttributeValue(Attributes.ATTACK_DAMAGE) / 2 + ")").withStyle(textformatting);
-							mc.font.draw(stack, s3, (int) 450 + widthOffset, (int) -50, 0xe0e0e0);
-							mc.font.draw(stack, s4, (int) 450 + widthOffset, (int) -40, 0xe0e0e0);
+							mc.font.draw(stack, s3, (int) 20, (int) -50, 0xe0e0e0);
+							mc.font.draw(stack, s4, (int) 20, (int) -40, 0xe0e0e0);
 							RenderSystem.setShader(GameRenderer::getPositionTexShader);
 							RenderSystem.setShaderTexture(0, Gui.GUI_ICONS_LOCATION);
 
-							renderHeart(mc.gui, stack, (int) 453 + widthOffset, (int) -40, true);
-							renderHeart(mc.gui, stack, (int) 453 + widthOffset, (int) -40, false);
+							renderHeart(mc.gui, stack, (int) 23, (int) -40, true);
+							renderHeart(mc.gui, stack, (int) 23, (int) -40, false);
 						}
 
 						if (k > 1) {
@@ -145,7 +141,7 @@ public class ClientHUDEvent {
 
 
 								Iterable<MobEffectInstance> iterable = collection.stream().filter(net.minecraftforge.client.ForgeHooksClient::shouldRenderEffect).sorted().collect(java.util.stream.Collectors.toList());
-								renderIcons(stack, 453 + widthOffset, -(k2 - 8), 6, iterable);
+								renderIcons(stack, 23, -(k2 - 8), 6, iterable);
 							}
 						}
 
@@ -162,17 +158,19 @@ public class ClientHUDEvent {
 						RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 						RenderSystem.setShaderTexture(0, SCOPE_GUI_LOCATION);
 						RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-						mc.gui.blit(stack, 26 + widthOffset, -80, 0, 0, 64 * 2, 124 * 2);
-						mc.gui.blit(stack, 58 + widthOffset, -80, 128, (32 * eyePhase * 1), 64, 32);
+						mc.gui.blit(stack, -98, -80, 0, 0, 64 * 2, 124 * 2);
+						mc.gui.blit(stack, -66, -80, 128, (32 * eyePhase * 1), 64, 32);
 						stack.popPose();
 						//render entity
 						stack.pushPose();
 						float entityWidth = entity.getDimensions(entity.getPose()).width;
 						float entityHeight = entity.getDimensions(entity.getPose()).height;
 
-						InventoryScreen.renderEntityInInventory(leftPos + 65 + widthOffset, topPos + 90, (int) (25 * (1 / entityWidth)), 0.0F, 0.0F, (LivingEntity) entity);
+						InventoryScreen.renderEntityInInventory(leftPos - 25, topPos + 90, (int) (25 * (1 / entityWidth)), 0.0F, 0.0F, (LivingEntity) entity);
 						stack.popPose();
 					}
+					mc.font.draw(stack, entity.getDisplayName(), (int) -45, (int) -100, 0xe0e0e0);
+
 				}
 				stack.popPose();
 			}
