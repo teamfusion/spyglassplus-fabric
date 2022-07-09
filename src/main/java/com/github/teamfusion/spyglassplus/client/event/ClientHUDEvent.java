@@ -195,8 +195,12 @@ public class ClientHUDEvent {
 
 				MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.cannot_render").withStyle(textformatting);
 
+				stack.pushPose();
+				stack.translate((double) width / 2, (double) topPos, 0.0D);
+				stack.scale(0.75F, 0.75F, 0.75F);
 
-				mc.font.draw(stack, s, (int) 40, (int) 20, 0x212121);
+				mc.font.draw(stack, s, (int) -220, (int) 0, 0x212121);
+				stack.popPose();
 			}
 		}
 	}

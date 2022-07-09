@@ -12,5 +12,5 @@
   "_comment4": "Info",
   "spyglassplus.spyglass.info.health": "Health",
   "spyglassplus.spyglass.info.damage": "Damage",
-  "spyglassplus.spyglass.info.cannot_render": "It won't work without Window size is 16;9. try to rescale it."
+  "spyglassplus.spyglass.info.cannot_render": "Discovery won't work without window size as 16:9, rescaling your window should fix it."
 }
