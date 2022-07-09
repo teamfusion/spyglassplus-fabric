@@ -4,7 +4,9 @@ import com.github.teamfusion.spyglassplus.core.ISpyable;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
@@ -50,29 +52,20 @@ public class ResetTargetMessage {
 				((ISpyable) player).setCommand(false);
 			}
 
-			AABB box = new AABB(player.blockPosition()).inflate(6.0D);
-			List<Wolf> nearbyWolves = player.level.getEntitiesOfClass(Wolf.class, box, TamableAnimal::isTame);
-			List<IronGolem> nearbyIronGolems = player.level.getEntitiesOfClass(IronGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-			List<SnowGolem> nearbySnowGolems = player.level.getEntitiesOfClass(SnowGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-			List<Fox> nearbyFoxes = player.level.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-			List<Axolotl> nearbyAxolotl = player.level.getEntitiesOfClass(Axolotl.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-			for (Wolf wolfEntity : nearbyWolves) {
-				wolfEntity.setTarget(null);
-			}
-			for (IronGolem ironGolemEntity : nearbyIronGolems) {
-				ironGolemEntity.setTarget(null);
+            AABB box = new AABB(player.blockPosition()).inflate(32.0D);
+            List<TamableAnimal> nearbyTamableAnimals = player.level.getEntitiesOfClass(TamableAnimal.class, box, TamableAnimal::isTame);
+            List<AbstractGolem> nearbyGolems = player.level.getEntitiesOfClass(AbstractGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
-			}
-			for (SnowGolem snowGolemEntity : nearbySnowGolems) {
-				snowGolemEntity.setTarget(null);
-			}
-			for (Fox foxEntity : nearbyFoxes) {
-				foxEntity.setTarget(null);
-			}
-
-			for (Axolotl axolotlEntity : nearbyAxolotl) {
-				axolotlEntity.setTarget(null);
-			}
+            for (TamableAnimal tamableAnimal : nearbyTamableAnimals) {
+                if (tamableAnimal.isOwnedBy(player)) {
+                    tamableAnimal.setTarget(null);
+                }
+            }
+            for (AbstractGolem golemEntity : nearbyGolems) {
+                if (golemEntity.getTarget() != player) {
+                    golemEntity.setTarget(null);
+                }
+            }
 
 		});
 
