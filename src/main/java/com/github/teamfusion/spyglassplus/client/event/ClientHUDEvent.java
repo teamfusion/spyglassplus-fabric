@@ -174,7 +174,7 @@ public class ClientHUDEvent {
 						stack.popPose();
 					}
 					stack.scale(sidebarScale, sidebarScale, sidebarScale);
-					mc.font.draw(stack, entity.getDisplayName(), (int) -45, (int) -100, 0xe0e0e0);
+					mc.font.draw(stack, entity.getDisplayName(), (int) -45, (int) -30, 0x212121);
 				}
 				stack.popPose();
 
