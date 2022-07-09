@@ -170,7 +170,7 @@ public class ClientHUDEvent {
 						float entityWidth = entity.getDimensions(entity.getPose()).width;
 						float entityHeight = entity.getDimensions(entity.getPose()).height;
 
-						InventoryScreen.renderEntityInInventory(leftPos - 25, topPos + 90, (int) (25 * (1 / entityWidth)), 0.0F, 0.0F, (LivingEntity) entity);
+						InventoryScreen.renderEntityInInventory(leftPos - 25, topPos + 90, (int) (25 * (1 / entityWidth)), 270.0F, 0.0F, (LivingEntity) entity);
 						stack.popPose();
 					}
 					stack.scale(sidebarScale, sidebarScale, sidebarScale);
