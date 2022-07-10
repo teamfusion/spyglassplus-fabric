@@ -57,6 +57,8 @@ public class ClientHUDEvent {
 	private static int width;
 	private static int height;
 
+	protected static int scopeTick;
+
 
 	@SubscribeEvent
 	public static void renderHudEvent(RenderGameOverlayEvent.Post event) {
@@ -94,6 +96,14 @@ public class ClientHUDEvent {
 			}
 
 			eyetick = 0;
+		}
+
+		if (mc.player.isScoping()) {
+			if (scopeTick < 2 * 20 * 60) {
+				++scopeTick;
+			}
+		} else {
+			scopeTick = 0;
 		}
 
 		int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.DISCOVERY.get(), mc.player.getUseItem());
@@ -191,16 +201,18 @@ public class ClientHUDEvent {
 					RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 				}
 			} else {
-				ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.WHITE};
+				if (scopeTick < 2 * 20 * 60) {
+					ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.WHITE};
 
-				MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.cannot_render").withStyle(textformatting);
+					MutableComponent s = new TranslatableComponent(SpyglassPlus.MOD_ID + ".spyglass.info.cannot_render").withStyle(textformatting);
 
-				stack.pushPose();
-				stack.translate((double) width / 2, (double) topPos, 0.0D);
-				stack.scale(0.75F, 0.75F, 0.75F);
+					stack.pushPose();
+					stack.translate((double) width / 2, (double) topPos, 0.0D);
+					stack.scale(0.75F, 0.75F, 0.75F);
 
-				mc.font.draw(stack, s, (int) -220, (int) 0, 0x212121);
-				stack.popPose();
+					mc.font.draw(stack, s, (int) -220, (int) -120, 0x212121);
+					stack.popPose();
+				}
 			}
 		}
 	}
