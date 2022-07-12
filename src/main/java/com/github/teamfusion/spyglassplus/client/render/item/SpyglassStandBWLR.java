@@ -2,7 +2,7 @@ package com.github.teamfusion.spyglassplus.client.render.item;
 
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.client.ModModelLayer;
-import com.github.teamfusion.spyglassplus.client.model.SpyglassStandModel;
+import com.github.teamfusion.spyglassplus.client.model.SmallSpyglassStandModel;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,11 +17,11 @@ import net.minecraft.world.item.ItemStack;
 public class SpyglassStandBWLR extends BlockEntityWithoutLevelRenderer {
 	private static final ResourceLocation SPYGLASS_STAND_LOCATION = new ResourceLocation(SpyglassPlus.MOD_ID, "textures/entity/spyglass_stand.png");
 
-	private SpyglassStandModel model;
+	private SmallSpyglassStandModel model;
 
 	public SpyglassStandBWLR() {
 		super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-		this.model = new SpyglassStandModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModModelLayer.SPYGLASS_STAND));
+		this.model = new SmallSpyglassStandModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModModelLayer.SPYGLASS_STAND));
 	}
 
 	@Override
