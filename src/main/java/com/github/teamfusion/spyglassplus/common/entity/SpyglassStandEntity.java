@@ -152,11 +152,17 @@ public class SpyglassStandEntity extends Entity {
 	@Override
 	protected void readAdditionalSaveData(CompoundTag p_20052_) {
 		this.setHigh(p_20052_.getBoolean("IsHigh"));
+		ItemStack itemstack = this.getSpyGlass();
+		if (!itemstack.isEmpty()) {
+			p_20052_.put("Spyglass", itemstack.save(new CompoundTag()));
+		}
 	}
 
 	@Override
 	protected void addAdditionalSaveData(CompoundTag p_20139_) {
 		p_20139_.putBoolean("IsHigh", this.isHigh());
+		ItemStack itemstack = ItemStack.of(p_20139_.getCompound("Spyglass"));
+		this.setSpyGlass(itemstack);
 	}
 
 	public void setHigh(boolean high) {
