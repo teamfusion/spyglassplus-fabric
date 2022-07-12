@@ -11,11 +11,11 @@ import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(modid = SpyglassPlus.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SpyglassPlusEntityTypes {
-	public static final DeferredRegister<EntityType<?>> ENTITIES_REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITIES, SpyglassPlus.MOD_ID);
+	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, SpyglassPlus.MOD_ID);
 
-	public static final RegistryObject<EntityType<SpyglassStandEntity>> SPYGLASS_STAND = ENTITIES_REGISTRY.register("spyglass_stand", () -> EntityType.Builder.<SpyglassStandEntity>of(SpyglassStandEntity::new, MobCategory.MISC).sized(0.6F, 1.6F).clientTrackingRange(8).build(prefix("spyglass_stand")));
+	public static final RegistryObject<EntityType<SpyglassStandEntity>> SPYGLASS_STAND = ENTITIES.register("spyglass_stand", () -> EntityType.Builder.<SpyglassStandEntity>of(SpyglassStandEntity::new, MobCategory.MISC).sized(0.6F, 1.6F).clientTrackingRange(8).build(prefix("spyglass_stand")));
 
 	private static String prefix(String path) {
-		return "spyglassplus." + path;
+		return SpyglassPlus.MOD_ID + "." + path;
 	}
 }
