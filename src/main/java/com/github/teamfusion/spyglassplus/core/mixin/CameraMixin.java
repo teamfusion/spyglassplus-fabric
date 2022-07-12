@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Camera.class)
-public class CameraMixin {
+public abstract class CameraMixin {
 
 	@Inject(method = "setup", at = @At("TAIL"))
 	public void setup(BlockGetter p_90576_, Entity p_90577_, boolean p_90578_, boolean p_90579_, float p_90580_, CallbackInfo callbackInfo) {
@@ -28,7 +28,5 @@ public class CameraMixin {
 	}
 
 	@Shadow
-	protected void setRotation(float p_90573_, float p_90574_) {
-
-	}
+	protected abstract void setRotation(float p_90573_, float p_90574_);
 }

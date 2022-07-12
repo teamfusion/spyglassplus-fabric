@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MouseHandler.class)
-public class MouseMixin implements ScrutinyAccess {
+public abstract class MouseMixin implements ScrutinyAccess {
 	private int zoom;
 	@Shadow
 	@Final
@@ -96,9 +96,7 @@ public class MouseMixin implements ScrutinyAccess {
 	}
 
 	@Shadow
-	private boolean isMouseGrabbed() {
-		return false;
-	}
+	abstract boolean isMouseGrabbed();
 
 	public void turn(ISpyable spyable, double p_19885_, double p_19886_) {
 		float f = (float) p_19886_ * 0.15F;

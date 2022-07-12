@@ -69,7 +69,7 @@ public class SpyglassPlus {
 
 		SpyglassPlusEnchantments.ENCHANTMENTS.register(bus);
 		SpyglassPlusItems.ITEMS.register(bus);
-		SpyglassPlusEntityTypes.ENTITIES_REGISTRY.register(bus);
+		SpyglassPlusEntityTypes.ENTITIES.register(bus);
 		log(Level.INFO, "Enhancing Spyglasses!");
 		this.setupMessages();
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientRegistrar::setup));
