@@ -92,7 +92,7 @@ public class SpyglassStandEntity extends Entity {
 				return true;
 			}
 		} else {
-			return true;
+			return false;
 		}
 	}
 
