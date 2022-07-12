@@ -33,6 +33,14 @@ public class InputEvents {
 
 		}
 
+		//reset spyglass stands look
+		if (Minecraft.getInstance().player != Minecraft.getInstance().cameraEntity && Minecraft.getInstance().player.isShiftKeyDown()) {
+			Minecraft.getInstance().setCameraEntity(Minecraft.getInstance().player);
+			((ISpyable) Minecraft.getInstance().player).setSpyglassStands(null);
+			((ISpyable) Minecraft.getInstance().player).setCameraRotX(0.0F);
+			((ISpyable) Minecraft.getInstance().player).setCameraRotY(0.0F);
+		}
+
 		if (!keyPush) {
 			keyPushed = false;
 		}

@@ -5,6 +5,7 @@ import com.github.teamfusion.spyglassplus.common.message.ResetTargetMessage;
 import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
 import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
+import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEntityTypes;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -68,6 +69,7 @@ public class SpyglassPlus {
 
 		SpyglassPlusEnchantments.ENCHANTMENTS.register(bus);
 		SpyglassPlusItems.ITEMS.register(bus);
+		SpyglassPlusEntityTypes.ENTITIES_REGISTRY.register(bus);
 		log(Level.INFO, "Enhancing Spyglasses!");
 		this.setupMessages();
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientRegistrar::setup));
