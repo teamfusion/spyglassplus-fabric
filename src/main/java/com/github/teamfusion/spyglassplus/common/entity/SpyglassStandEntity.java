@@ -49,11 +49,12 @@ public class SpyglassStandEntity extends Entity {
 	@Override
 	public void tick() {
 		super.tick();
-		this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
 
 		this.move(MoverType.SELF, this.getDeltaMovement());
 		if ((this.onGround || this.horizontalCollision)) {
 			this.setDeltaMovement(Vec3.ZERO);
+		} else {
+			this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
 		}
 
 		double d1 = 0.92D;
