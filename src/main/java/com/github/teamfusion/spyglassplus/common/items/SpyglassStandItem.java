@@ -12,7 +12,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +40,7 @@ public class SpyglassStandItem extends Item {
 			BlockPos blockpos = blockplacecontext.getClickedPos();
 			ItemStack itemstack = p_40510_.getItemInHand();
 			Vec3 vec3 = Vec3.atBottomCenterOf(blockpos);
-			AABB aabb = EntityType.ARMOR_STAND.getDimensions().makeBoundingBox(vec3.x(), vec3.y(), vec3.z());
+			AABB aabb = SpyglassPlusEntityTypes.SPYGLASS_STAND.get().getDimensions().makeBoundingBox(vec3.x(), vec3.y(), vec3.z());
 			if (level.noCollision((Entity) null, aabb) && level.getEntities((Entity) null, aabb).isEmpty()) {
 				if (level instanceof ServerLevel) {
 					ServerLevel serverlevel = (ServerLevel) level;

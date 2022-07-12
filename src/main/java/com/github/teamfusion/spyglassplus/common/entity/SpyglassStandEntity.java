@@ -202,7 +202,7 @@ public class SpyglassStandEntity extends Entity {
 	@Nullable
 	@Override
 	public ItemStack getPickResult() {
-		return SpyglassPlusItems.SPYGLASS_STAND.get().getDefaultInstance();
+		return new ItemStack(SpyglassPlusItems.SPYGLASS_STAND.get());
 	}
 
 	public Packet<?> getAddEntityPacket() {
