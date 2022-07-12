@@ -82,19 +82,11 @@ public class SpyglassStandEntity extends Entity {
 				boolean flag = damagesource.getEntity() instanceof Player && ((Player) damagesource.getEntity()).getAbilities().instabuild;
 				if (flag || this.getDamage() > 40.0F) {
 					this.ejectPassengers();
-					if (flag && !this.hasCustomName()) {
-						if (!this.getSpyGlass().isEmpty()) {
-							this.spawnAtLocation(this.getSpyGlass());
-						}
-						this.spawnAtLocation(this.getPickResult());
-						this.discard();
-					} else {
-						if (!this.getSpyGlass().isEmpty()) {
-							this.spawnAtLocation(this.getSpyGlass());
-						}
-						this.spawnAtLocation(this.getPickResult());
-						this.discard();
+					if (!this.getSpyGlass().isEmpty()) {
+						this.spawnAtLocation(this.getSpyGlass());
 					}
+					this.spawnAtLocation(this.getPickResult());
+					this.discard();
 				}
 
 				return true;
