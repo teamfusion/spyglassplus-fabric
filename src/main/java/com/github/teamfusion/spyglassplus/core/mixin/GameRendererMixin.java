@@ -37,11 +37,15 @@ public class GameRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "getNightVisionScale", cancellable = true)
     private static void getNightVisionStrength(LivingEntity entity, float f, CallbackInfoReturnable<Float> cir) {
-        int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), entity.getUseItem());
-        if (((Player) entity).isScoping() && i > 0) {
-            cir.setReturnValue(1.0F);
-        }
-    }
+		boolean flag = entity instanceof ISpyable && ((ISpyable) entity).getSpyGlassStands() != null && !((ISpyable) entity).getSpyGlassStands().getSpyGlass().isEmpty();
+		ItemStack itemstack = flag ? ((ISpyable) entity).getSpyGlassStands().getSpyGlass() : entity.getUseItem();
+
+
+		int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), itemstack);
+		if (((Player) entity).isScoping() && i > 0) {
+			cir.setReturnValue(1.0F);
+		}
+	}
 
     @Inject(at = @At("HEAD"), method = "getFov", cancellable = true)
     public void getFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir) {
@@ -68,9 +72,9 @@ public class GameRendererMixin {
 
 					}
 
-					int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), player.getUseItem());
+					int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), itemstack);
 
-					if (player.isScoping() && j > 0 && checkEntityWithNoBlockClip(flag ? Minecraft.getInstance().cameraEntity : player, 64.0D) != null) {
+					if (player.isScoping() && j > 0 && checkEntityWithNoBlockClip(flag ? ((ISpyable) Minecraft.getInstance().player).getSpyGlassStands() : player, 64.0D) != null) {
 						if (currentZoom <= 1.0F) {
 							currentZoom += 0.001F;
 						}

@@ -2,6 +2,7 @@ package com.github.teamfusion.spyglassplus.core.mixin;
 
 import com.github.teamfusion.spyglassplus.core.ISpyable;
 import net.minecraft.client.Camera;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -16,7 +17,7 @@ public abstract class CameraMixin {
 
 	@Inject(method = "setup", at = @At("TAIL"))
 	public void setup(BlockGetter p_90576_, Entity p_90577_, boolean p_90578_, boolean p_90579_, float p_90580_, CallbackInfo callbackInfo) {
-		if (p_90577_ != Minecraft.getInstance().player && Minecraft.getInstance().player.isScoping()) {
+		if (p_90577_ != Minecraft.getInstance().player && Minecraft.getInstance().player.isScoping() && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
 			ISpyable spyable = ((ISpyable) Minecraft.getInstance().player);
 			this.setRotation(p_90577_.getViewYRot(p_90580_) + spyable.getCameraRotY(), p_90577_.getViewXRot(p_90580_) + spyable.getCameraRotX());
 		}

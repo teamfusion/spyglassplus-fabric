@@ -26,12 +26,16 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.OptionalInt;
+
 public class SpyglassStandEntity extends Entity {
 	private static final EntityDataAccessor<Boolean> DATA_IS_HIGH = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.BOOLEAN);
 
 	private static final EntityDataAccessor<Integer> DATA_ID_HURT = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Float> DATA_ID_DAMAGE = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<ItemStack> DATA_SPYGLASS = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.ITEM_STACK);
+
+	private static final EntityDataAccessor<OptionalInt> DATA_OWNER_ID = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
 
 
 	public SpyglassStandEntity(EntityType<? extends SpyglassStandEntity> p_20966_, Level p_20967_) {
@@ -111,20 +115,21 @@ public class SpyglassStandEntity extends Entity {
 				return InteractionResult.SUCCESS;
 			}
 		} else {
-			if (player.isShiftKeyDown()) {
+			if (this.getOwner() == null && player.isShiftKeyDown()) {
 				this.spawnAtLocation(this.getSpyGlass());
 				this.setSpyGlass(ItemStack.EMPTY);
 				this.playSound(SoundEvents.SPYGLASS_STOP_USING, 1.0F, 1.0F);
 
 				return InteractionResult.SUCCESS;
-			} else {
+			} else if (this.getOwner() == null) {
 				if (this.level.isClientSide() && ((ISpyable) player).getSpyGlassStands() == null) {
-					((ISpyable) player).setSpyglassStands(this);
 					if (Minecraft.getInstance().player == player) {
 						Minecraft.getInstance().setCameraEntity(this);
 					}
 				}
-				this.setYRot(player.getYRot());
+				this.setOwner(player);
+				((ISpyable) player).setSpyglassStands(this);
+
 				this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
 				return InteractionResult.CONSUME;
 
@@ -140,6 +145,7 @@ public class SpyglassStandEntity extends Entity {
 		this.entityData.define(DATA_ID_HURT, 0);
 		this.entityData.define(DATA_ID_DAMAGE, 0.0F);
 		this.entityData.define(DATA_SPYGLASS, ItemStack.EMPTY);
+		this.entityData.define(DATA_OWNER_ID, OptionalInt.empty());
 	}
 
 	@Override
@@ -147,6 +153,29 @@ public class SpyglassStandEntity extends Entity {
 		this.setHigh(p_20052_.getBoolean("IsHigh"));
 		ItemStack itemstack = ItemStack.of(p_20052_.getCompound("Spyglass"));
 		this.setSpyGlass(itemstack);
+	}
+
+	@Override
+	public float getViewXRot(float p_20268_) {
+		if (this.getOwner() != null && this.getOwner() instanceof ISpyable) {
+			return this.getXRot() + ((ISpyable) this.getOwner()).getCameraRotX();
+		}
+		return super.getViewXRot(p_20268_);
+	}
+
+	@Override
+	public float getViewYRot(float p_20268_) {
+		if (this.getOwner() != null && this.getOwner() instanceof ISpyable) {
+			return this.getYRot() + ((ISpyable) this.getOwner()).getCameraRotY();
+		}
+		return super.getViewYRot(p_20268_);
+	}
+
+	public Vec3 getLookAngle() {
+		if (this.getOwner() != null && this.getOwner() instanceof ISpyable) {
+			return this.calculateViewVector(this.getXRot() + ((ISpyable) this.getOwner()).getCameraRotX(), this.getYRot() + ((ISpyable) this.getOwner()).getCameraRotY());
+		}
+		return this.calculateViewVector(this.getXRot(), this.getYRot());
 	}
 
 	@Override
@@ -188,6 +217,24 @@ public class SpyglassStandEntity extends Entity {
 
 	public ItemStack getSpyGlass() {
 		return this.entityData.get(DATA_SPYGLASS);
+	}
+
+	public void setOwner(Entity entity) {
+		if (entity == null) {
+			this.entityData.set(DATA_OWNER_ID, OptionalInt.empty());
+		} else {
+			this.entityData.set(DATA_OWNER_ID, OptionalInt.of(entity.getId()));
+		}
+	}
+
+	@Nullable
+	public Entity getOwner() {
+		OptionalInt optionalInt = this.entityData.get(DATA_OWNER_ID);
+		if (optionalInt.isPresent()) {
+			Entity entity = this.level.getEntity(optionalInt.getAsInt());
+			return entity != null ? entity : null;
+		}
+		return null;
 	}
 
 	public EntityDimensions getDimensions(Pose p_19721_) {

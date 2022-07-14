@@ -3,12 +3,12 @@ package com.github.teamfusion.spyglassplus.client.render;
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.client.ModModelLayer;
 import com.github.teamfusion.spyglassplus.client.model.SmallSpyglassStandModel;
+import com.github.teamfusion.spyglassplus.client.model.SpyglassStandBaseModel;
 import com.github.teamfusion.spyglassplus.client.model.SpyglassStandModel;
 import com.github.teamfusion.spyglassplus.common.entity.SpyglassStandEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -60,18 +60,20 @@ public class SpyglassStandRender<T extends SpyglassStandEntity> extends EntityRe
 		posestack.scale(-1.0F, -1.0F, 1.0F);
 		posestack.translate(0.0F, -1.501F, 0.0F);
 
-		EntityModel<T> entityModel = entity.isHigh() ? this.model : this.small_model;
+		SpyglassStandBaseModel<T> entityModel = entity.isHigh() ? this.model : this.small_model;
 
+		entityModel.onlySpyglass = false;
 		entityModel.setupAnim(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 		VertexConsumer vertexconsumer = buffersource.getBuffer(entityModel.renderType(this.getTextureLocation(entity)));
 		entityModel.renderToBuffer(posestack, vertexconsumer, p_115423_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
 		if (!entity.getSpyGlass().isEmpty() && entity.getSpyGlass().getItem().isFoil(entity.getSpyGlass())) {
+			entityModel.onlySpyglass = true;
 			entityModel.setupAnim(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 			VertexConsumer vertexconsumer2 = buffersource.getBuffer(RenderType.glintTranslucent());
 			entityModel.renderToBuffer(posestack, vertexconsumer2, p_115423_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 		}
-
+		entityModel.onlySpyglass = false;
 		posestack.popPose();
 	}
 

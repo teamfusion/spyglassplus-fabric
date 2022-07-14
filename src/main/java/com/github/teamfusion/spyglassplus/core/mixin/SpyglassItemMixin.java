@@ -12,11 +12,6 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.AbstractGolem;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.animal.SnowGolem;
-import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
@@ -70,13 +65,18 @@ public class SpyglassItemMixin extends Item {
 	@Override
 	public void onUseTick(Level level, LivingEntity user, ItemStack stack, int remainingUseTicks) {
 		if (user instanceof Player) {
-			int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), stack);
+			boolean flag = ((ISpyable) user).getSpyGlassStands() != null && !((ISpyable) user).getSpyGlassStands().getSpyGlass().isEmpty();
+
+			ItemStack itemstack2 = flag ? ((ISpyable) user).getSpyGlassStands().getSpyGlass() : user.getUseItem();
+
+
+			int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), itemstack2);
 			if (i > 0) {
 				user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1, 1, false, false, false));
 			}
-			int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), stack);
+			int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), itemstack2);
 			if (j > 0) {
-				Entity entity = checkEntity(user, 64.0D);
+				Entity entity = checkEntity(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
 				MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
 				if (entity instanceof LivingEntity) {
 					((LivingEntity) entity).addEffect(effectInstance);
@@ -84,7 +84,7 @@ public class SpyglassItemMixin extends Item {
 			}
 			int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), stack);
 			if (k > 0) {
-				Entity entity = checkEntityWithNoBlockClip(user, 64.0D);
+				Entity entity = checkEntityWithNoBlockClip(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
 				MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
 				if (entity instanceof LivingEntity) {
 					((LivingEntity) entity).addEffect(effectInstance);
@@ -97,8 +97,13 @@ public class SpyglassItemMixin extends Item {
 
 	@Override
 	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        Player user = (Player) entity;
-		if (!user.isScoping() && EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.SCRUTINY.get(), stack) > 0) {
+		Player user = (Player) entity;
+		boolean flag = ((ISpyable) user).getSpyGlassStands() != null && !((ISpyable) user).getSpyGlassStands().getSpyGlass().isEmpty();
+
+		ItemStack itemstack2 = flag ? ((ISpyable) user).getSpyGlassStands().getSpyGlass() : user.getUseItem();
+
+
+		if (!user.isScoping() && EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.SCRUTINY.get(), itemstack2) > 0) {
 			if (world.isClientSide()) return;
 			if (user instanceof ServerPlayer) {
 				SpyglassPlus.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) user), new ScrutinyResetMessage());
@@ -115,7 +120,7 @@ public class SpyglassItemMixin extends Item {
 				if (this.initiallyCommanded) {
 					if (((ISpyable) user).getCommandTick() == 0) {
 						this.setCommanded(false);
-						Entity target = checkEntityWithNoBlockClip(user, 64.0D);
+						Entity target = checkEntityWithNoBlockClip(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
 						AABB box = new AABB(user.blockPosition()).inflate(32.0D);
 						List<TamableAnimal> nearbyTamableAnimals = world.getEntitiesOfClass(TamableAnimal.class, box, TamableAnimal::isTame);
                         List<AbstractGolem> nearbyGolems = world.getEntitiesOfClass(AbstractGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
@@ -145,7 +150,7 @@ public class SpyglassItemMixin extends Item {
 		}
 	}
 
-	private static Entity checkEntity(LivingEntity user, double distance) {
+	private static Entity checkEntity(Entity user, double distance) {
 		Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isAlive();
 		Vec3 eyePos = user.getEyePosition(1.0F);
 		Vec3 lookVec = user.getLookAngle();
@@ -158,7 +163,7 @@ public class SpyglassItemMixin extends Item {
 		return traceResult.getEntity();
 	}
 
-	private static Entity checkEntityWithNoBlockClip(LivingEntity user, double distance) {
+	private static Entity checkEntityWithNoBlockClip(Entity user, double distance) {
 		Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isAlive();
 		Vec3 eyePos = user.getEyePosition(1.0F);
 		Vec3 lookVec = user.getLookAngle();

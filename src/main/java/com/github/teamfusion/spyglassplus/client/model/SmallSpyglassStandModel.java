@@ -5,7 +5,6 @@ package com.github.teamfusion.spyglassplus.client.model;// Made with Blockbench 
 import com.github.teamfusion.spyglassplus.common.entity.SpyglassStandEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -14,16 +13,19 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-public class SmallSpyglassStandModel<T extends SpyglassStandEntity> extends EntityModel<T> {
+public class SmallSpyglassStandModel<T extends SpyglassStandEntity> extends SpyglassStandBaseModel<T> {
 	private final ModelPart all;
 	private final ModelPart holderrotate;
+	private final ModelPart legs;
 	private final ModelPart spyglass;
 
 
 	public SmallSpyglassStandModel(ModelPart root) {
 		this.all = root.getChild("all");
+		this.legs = this.all.getChild("legs");
 		this.holderrotate = this.all.getChild("holderrotate");
-		this.spyglass = this.holderrotate.getChild("spyglass");
+
+		this.spyglass = this.all.getChild("spyglass");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -42,8 +44,8 @@ public class SmallSpyglassStandModel<T extends SpyglassStandEntity> extends Enti
 
 		PartDefinition holderrotate = all.addOrReplaceChild("holderrotate", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -4.0F, 0.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -26.0F, 0.0F));
 
-		PartDefinition spyglass = holderrotate.addOrReplaceChild("spyglass", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -3.0F, -7.0F, 2.0F, 2.0F, 11.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 13).addBox(-1.2F, -3.2F, -7.2F, 2.0F, 2.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition spyglass = all.addOrReplaceChild("spyglass", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -3.0F, -7.0F, 2.0F, 2.0F, 11.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 13).addBox(-1.2F, -3.2F, -7.2F, 2.0F, 2.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -26.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
@@ -51,10 +53,13 @@ public class SmallSpyglassStandModel<T extends SpyglassStandEntity> extends Enti
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.spyglass.visible = !entity.getSpyGlass().isEmpty();
+		this.holderrotate.visible = !this.onlySpyglass;
+		this.legs.visible = !this.onlySpyglass;
 	}
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		all.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 	}
+
 }

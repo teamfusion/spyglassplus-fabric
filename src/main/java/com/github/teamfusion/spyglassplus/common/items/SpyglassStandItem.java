@@ -51,7 +51,7 @@ public class SpyglassStandItem extends Item {
 
 					stand.moveTo(stand.getX(), stand.getY(), stand.getZ(), 0.0F, 0.0F);
 					if (p_40510_.getPlayer() != null) {
-						stand.setXRot(p_40510_.getPlayer().getXRot());
+						stand.setXRot(0.0F);
 						stand.setYRot(p_40510_.getPlayer().getYRot());
 					}
 
