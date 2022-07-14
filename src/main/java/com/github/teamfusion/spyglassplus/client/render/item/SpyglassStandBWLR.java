@@ -13,7 +13,10 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class SpyglassStandBWLR extends BlockEntityWithoutLevelRenderer {
 	private static final ResourceLocation SPYGLASS_STAND_LOCATION = new ResourceLocation(SpyglassPlus.MOD_ID, "textures/entity/spyglass_stand.png");
 
