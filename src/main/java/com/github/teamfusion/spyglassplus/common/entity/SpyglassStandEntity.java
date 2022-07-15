@@ -116,7 +116,7 @@ public class SpyglassStandEntity extends Entity {
 				return InteractionResult.SUCCESS;
 			}
 		} else {
-			if (this.getOwner() == null && player.isShiftKeyDown()) {
+			if (player.isShiftKeyDown()) {
 				this.spawnAtLocation(this.getSpyGlass());
 				this.setSpyGlass(ItemStack.EMPTY);
 				this.playSound(SoundEvents.SPYGLASS_STOP_USING, 1.0F, 1.0F);
