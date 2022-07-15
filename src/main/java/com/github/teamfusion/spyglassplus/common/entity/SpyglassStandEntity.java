@@ -26,7 +26,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.OptionalInt;
+import java.util.Optional;
+import java.util.UUID;
 
 public class SpyglassStandEntity extends Entity {
 	private static final EntityDataAccessor<Boolean> DATA_IS_HIGH = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.BOOLEAN);
@@ -35,7 +36,7 @@ public class SpyglassStandEntity extends Entity {
 	private static final EntityDataAccessor<Float> DATA_ID_DAMAGE = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.FLOAT);
 	private static final EntityDataAccessor<ItemStack> DATA_SPYGLASS = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.ITEM_STACK);
 
-	private static final EntityDataAccessor<OptionalInt> DATA_OWNER_ID = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
+	private static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_ID = SynchedEntityData.defineId(SpyglassStandEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
 
 	public SpyglassStandEntity(EntityType<? extends SpyglassStandEntity> p_20966_, Level p_20967_) {
@@ -145,7 +146,7 @@ public class SpyglassStandEntity extends Entity {
 		this.entityData.define(DATA_ID_HURT, 0);
 		this.entityData.define(DATA_ID_DAMAGE, 0.0F);
 		this.entityData.define(DATA_SPYGLASS, ItemStack.EMPTY);
-		this.entityData.define(DATA_OWNER_ID, OptionalInt.empty());
+		this.entityData.define(DATA_OWNER_ID, Optional.empty());
 	}
 
 	@Override
@@ -223,17 +224,17 @@ public class SpyglassStandEntity extends Entity {
 
 	public void setOwner(Entity entity) {
 		if (entity == null) {
-			this.entityData.set(DATA_OWNER_ID, OptionalInt.empty());
+			this.entityData.set(DATA_OWNER_ID, Optional.empty());
 		} else {
-			this.entityData.set(DATA_OWNER_ID, OptionalInt.of(entity.getId()));
+			this.entityData.set(DATA_OWNER_ID, Optional.of(entity.getUUID()));
 		}
 	}
 
 	@Nullable
 	public Entity getOwner() {
-		OptionalInt optionalInt = this.entityData.get(DATA_OWNER_ID);
-		if (optionalInt.isPresent()) {
-			Entity entity = this.level.getEntity(optionalInt.getAsInt());
+		Optional<UUID> optional = this.entityData.get(DATA_OWNER_ID);
+		if (optional.isPresent()) {
+			Entity entity = this.level.getPlayerByUUID(optional.get());
 			return entity != null ? entity : null;
 		}
 		return null;
