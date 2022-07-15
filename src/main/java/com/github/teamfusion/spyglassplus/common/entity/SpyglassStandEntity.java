@@ -122,7 +122,7 @@ public class SpyglassStandEntity extends Entity {
 				this.playSound(SoundEvents.SPYGLASS_STOP_USING, 1.0F, 1.0F);
 
 				return InteractionResult.SUCCESS;
-			} else if (this.getOwner() == null) {
+			} else {
 				if (this.level.isClientSide() && ((ISpyable) player).getSpyGlassStands() == null) {
 					if (Minecraft.getInstance().player == player) {
 						Minecraft.getInstance().setCameraEntity(this);
