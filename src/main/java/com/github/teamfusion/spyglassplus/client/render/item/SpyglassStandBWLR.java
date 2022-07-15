@@ -24,7 +24,7 @@ public class SpyglassStandBWLR extends BlockEntityWithoutLevelRenderer {
 
 	public SpyglassStandBWLR() {
 		super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-		this.model = new SmallSpyglassStandModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModModelLayer.SPYGLASS_STAND));
+		this.model = new SmallSpyglassStandModel(Minecraft.getInstance().getEntityModels().bakeLayer(ModModelLayer.SMALL_SPYGLASS_STAND));
 	}
 
 	@Override
