@@ -130,6 +130,7 @@ public class SpyglassStandEntity extends Entity {
 				}
 				this.setOwner(player);
 				((ISpyable) player).setSpyglassStands(this);
+				this.setYRot(player.getYRot());
 
 				this.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
 				return InteractionResult.CONSUME;
