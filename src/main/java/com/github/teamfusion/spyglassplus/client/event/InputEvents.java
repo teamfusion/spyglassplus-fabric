@@ -9,7 +9,7 @@ import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.ISpyable;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -30,6 +30,7 @@ public class InputEvents {
 		onInput(mc);
 
 		if (mc.player.isScoping() && keyPush && !keyPushed) {
+			((ISpyable) mc.player).setCommand(true);
 			SpyglassPlus.CHANNEL.sendToServer(new TargetMessage(mc.player.getId()));
 			keyPushed = true;
 
@@ -52,17 +53,23 @@ public class InputEvents {
 	}
 
 	private static void onInput(Minecraft mc) {
-        int commandLevel = Math.max(EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), mc.player.getItemInHand(InteractionHand.MAIN_HAND)), EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), mc.player.getItemInHand(InteractionHand.OFF_HAND)));
+		boolean flag = ((ISpyable) mc.player).getSpyGlassStands() != null && !((ISpyable) mc.player).getSpyGlassStands().getSpyGlass().isEmpty();
 
-        if (mc.player instanceof ISpyable && commandLevel > 0) {
-            if (mc.player.isScoping()) {
-                keyPush = ClientRegistrar.KEY_BIND_SPYGLASS_SET_TARGET.isDown();
-            }
-            resetKeyPush = ClientRegistrar.KEY_BIND_SPYGLASS_RESET_TARGET.isDown();
+		ItemStack itemstack2 = flag ? ((ISpyable) mc.player).getSpyGlassStands().getSpyGlass() : mc.player.getUseItem();
+
+
+		int commandLevel = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), itemstack2);
+
+		if (mc.player instanceof ISpyable && commandLevel > 0) {
+			if (mc.player.isScoping()) {
+				keyPush = ClientRegistrar.KEY_BIND_SPYGLASS_SET_TARGET.isDown();
+			}
+			resetKeyPush = ClientRegistrar.KEY_BIND_SPYGLASS_RESET_TARGET.isDown();
 		}
 
 
 		if (resetKeyPush && !resetKeyPushed) {
+			((ISpyable) mc.player).setCommand(false);
 			SpyglassPlus.CHANNEL.sendToServer(new ResetTargetMessage(mc.player.getId()));
 
 			resetKeyPushed = true;

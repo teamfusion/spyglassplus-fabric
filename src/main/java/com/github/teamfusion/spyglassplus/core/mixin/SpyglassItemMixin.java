@@ -12,6 +12,8 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.AbstractGolem;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
@@ -33,8 +35,6 @@ import java.util.function.Predicate;
 @Mixin(SpyglassItem.class)
 public class SpyglassItemMixin extends Item {
 	private boolean isCommanded = false;
-	private boolean initiallyCommanded = false;
-
 	public SpyglassItemMixin(Properties settings) {
 		super(settings);
 	}
@@ -55,11 +55,6 @@ public class SpyglassItemMixin extends Item {
 
 	public void setCommanded(boolean commanded) {
 		this.isCommanded = commanded;
-	}
-
-
-	public void setInitiallyCommanded(boolean initiallyCommanded) {
-		this.initiallyCommanded = initiallyCommanded;
 	}
 
 	@Override
@@ -88,7 +83,6 @@ public class SpyglassItemMixin extends Item {
 				MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
 				if (entity instanceof LivingEntity) {
 					((LivingEntity) entity).addEffect(effectInstance);
-					this.setInitiallyCommanded(true);
 				}
 			}
 
@@ -117,31 +111,44 @@ public class SpyglassItemMixin extends Item {
 
 		if (user.isScoping()) {
 			if (user instanceof ISpyable && ((ISpyable) user).isCommand()) {
-				if (this.initiallyCommanded) {
+				if (EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), itemstack2) > 0) {
 					if (((ISpyable) user).getCommandTick() == 0) {
 						this.setCommanded(false);
 						Entity target = checkEntityWithNoBlockClip(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
 						AABB box = new AABB(user.blockPosition()).inflate(32.0D);
 						List<TamableAnimal> nearbyTamableAnimals = world.getEntitiesOfClass(TamableAnimal.class, box, TamableAnimal::isTame);
-                        List<AbstractGolem> nearbyGolems = world.getEntitiesOfClass(AbstractGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+						List<AbstractGolem> nearbyGolems = world.getEntitiesOfClass(AbstractGolem.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+						List<Fox> nearbyFox = world.getEntitiesOfClass(Fox.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+						List<Axolotl> nearbyAxolotl = world.getEntitiesOfClass(Axolotl.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+
 
 						if (target != null && !(target instanceof TamableAnimal tamableTarget && tamableTarget.isTame() && tamableTarget.isOwnedBy(user))) {
-								this.setCommanded(true);
-								this.setInitiallyCommanded(false);
-								((ISpyable) user).setCommandTick(100);
-								if (this.isCommanded()) {
-									for (TamableAnimal tamableAnimal : nearbyTamableAnimals) {
-										if (tamableAnimal.isAlive() && target != tamableAnimal && target instanceof LivingEntity livingTarget && tamableAnimal.isOwnedBy(user)) {
-											tamableAnimal.setTarget(livingTarget);
-										}
+							this.setCommanded(true);
+							((ISpyable) user).setCommandTick(100);
+							if (this.isCommanded()) {
+								for (TamableAnimal tamableAnimal : nearbyTamableAnimals) {
+									if (tamableAnimal.isAlive() && target != tamableAnimal && target instanceof LivingEntity livingTarget && tamableAnimal.isOwnedBy(user)) {
+										tamableAnimal.setTarget(livingTarget);
 									}
-                                    for (AbstractGolem golemEntity : nearbyGolems) {
-                                        if (golemEntity.isAlive() && target != golemEntity && target instanceof LivingEntity livingTarget && golemEntity.getTarget() != user) {
-                                            golemEntity.setTarget(livingTarget);
-                                        }
-                                    }
-									((ISpyable) user).setCommand(false);
 								}
+								for (Fox fox : nearbyFox) {
+									if (fox.isAlive() && target != fox && target instanceof LivingEntity livingTarget && fox.getTarget() != user) {
+										fox.setTarget(livingTarget);
+									}
+								}
+								for (Axolotl axolotl : nearbyAxolotl) {
+									if (axolotl.isAlive() && target != axolotl && target instanceof LivingEntity livingTarget && axolotl.getTarget() != user) {
+										axolotl.setTarget(livingTarget);
+									}
+								}
+
+								for (AbstractGolem golemEntity : nearbyGolems) {
+									if (golemEntity.isAlive() && target != golemEntity && target instanceof LivingEntity livingTarget && golemEntity.getTarget() != user) {
+										golemEntity.setTarget(livingTarget);
+									}
+								}
+								((ISpyable) user).setCommand(false);
+							}
 
 						}
 					}

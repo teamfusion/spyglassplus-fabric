@@ -43,14 +43,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements ISpyable
         this.entityData.define(DATA_SPYGLASS_ID, OptionalInt.empty());
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
-    protected void tick(CallbackInfo callbackInfo) {
-        if (this.getSpyGlassStands() != null) {
-            this.getSpyGlassStands().getSpyGlass().onUseTick(this.level, this, 0);
-            this.getSpyGlassStands().getSpyGlass().inventoryTick(this.level, this, 0, false);
-        }
-    }
-
     @Inject(method = "isScoping", at = @At("RETURN"), cancellable = true)
     private void usingSpyglass(CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValueZ() && this.getSpyGlassStands() != null) {

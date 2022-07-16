@@ -16,6 +16,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -54,6 +55,11 @@ public class SpyglassStandEntity extends Entity {
 	@Override
 	public void tick() {
 		super.tick();
+
+		if (this.getOwner() != null) {
+			this.getSpyGlass().onUseTick(this.level, this.getOwner(), 0);
+			this.getSpyGlass().inventoryTick(this.level, this.getOwner(), 0, false);
+		}
 
 		this.move(MoverType.SELF, this.getDeltaMovement());
 		if ((this.onGround || this.horizontalCollision)) {
@@ -171,7 +177,7 @@ public class SpyglassStandEntity extends Entity {
 	@Override
 	public float getViewXRot(float p_20268_) {
 		if (this.getOwner() != null && this.getOwner() instanceof ISpyable) {
-			return this.getXRot() + ((ISpyable) this.getOwner()).getCameraRotX();
+			return this.getXRot() + ((ISpyable) this.getOwner()).getCameraRotX() % 360;
 		}
 		return super.getViewXRot(p_20268_);
 	}
@@ -179,14 +185,14 @@ public class SpyglassStandEntity extends Entity {
 	@Override
 	public float getViewYRot(float p_20268_) {
 		if (this.getOwner() != null && this.getOwner() instanceof ISpyable) {
-			return this.getYRot() + ((ISpyable) this.getOwner()).getCameraRotY();
+			return this.getYRot() + ((ISpyable) this.getOwner()).getCameraRotY() % 360;
 		}
 		return super.getViewYRot(p_20268_);
 	}
 
 	public Vec3 getLookAngle() {
 		if (this.getOwner() != null && this.getOwner() instanceof ISpyable) {
-			return this.calculateViewVector(this.getXRot() + ((ISpyable) this.getOwner()).getCameraRotX(), this.getYRot() + ((ISpyable) this.getOwner()).getCameraRotY());
+			return this.calculateViewVector(this.getXRot() + ((ISpyable) this.getOwner()).getCameraRotX() % 360, this.getYRot() + ((ISpyable) this.getOwner()).getCameraRotY() % 360);
 		}
 		return this.calculateViewVector(this.getXRot(), this.getYRot());
 	}
@@ -232,11 +238,11 @@ public class SpyglassStandEntity extends Entity {
 	}
 
 	@Nullable
-	public Entity getOwner() {
+	public LivingEntity getOwner() {
 		Optional<UUID> optional = this.entityData.get(DATA_OWNER_ID);
 		if (optional.isPresent()) {
-			Entity entity = this.level.getPlayerByUUID(optional.get());
-			return entity != null ? entity : null;
+			Player entity = this.level.getPlayerByUUID(optional.get());
+			return entity;
 		}
 		return null;
 	}

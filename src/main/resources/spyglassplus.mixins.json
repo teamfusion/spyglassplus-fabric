@@ -13,8 +13,7 @@
     "GameRendererMixin",
     "GuiMixin",
     "MouseMixin",
-    "PlayerInventoryMixin",
-    "CameraMixin"
+    "PlayerInventoryMixin"
   ],
   "injectors": {
     "defaultRequire": 1
