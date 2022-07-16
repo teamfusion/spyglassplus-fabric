@@ -3,6 +3,7 @@ package com.github.teamfusion.spyglassplus.client.model;// Made with Blockbench 
 // Paste this class into your mod and generate all required imports
 
 import com.github.teamfusion.spyglassplus.common.entity.SpyglassStandEntity;
+import com.github.teamfusion.spyglassplus.core.ISpyable;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.ModelPart;
@@ -55,6 +56,10 @@ public class SmallSpyglassStandModel<T extends SpyglassStandEntity> extends Spyg
 		this.spyglass.visible = !entity.getSpyGlass().isEmpty();
 		this.holderrotate.visible = !this.onlySpyglass;
 		this.legs.visible = !this.onlySpyglass;
+		if (entity.getOwner() instanceof ISpyable) {
+			this.spyglass.xRot = ((ISpyable) entity.getOwner()).getCameraRotX() * ((float) Math.PI / 180F);
+			this.holderrotate.xRot = ((ISpyable) entity.getOwner()).getCameraRotX() * ((float) Math.PI / 180F);
+		}
 	}
 
 	@Override
