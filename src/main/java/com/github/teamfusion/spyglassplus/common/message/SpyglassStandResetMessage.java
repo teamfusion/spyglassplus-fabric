@@ -37,6 +37,7 @@ public class SpyglassStandResetMessage {
 
 			if (player instanceof ISpyable) {
 				if (((ISpyable) player).getSpyGlassStands() != null) {
+					((ISpyable) player).getSpyGlassStands().setXRot(((ISpyable) player).getCameraRotX());
 					((ISpyable) player).getSpyGlassStands().setOwner(null);
 				}
 				((ISpyable) player).setSpyglassStands(null);

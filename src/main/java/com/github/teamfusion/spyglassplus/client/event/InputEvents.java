@@ -3,7 +3,6 @@ package com.github.teamfusion.spyglassplus.client.event;
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.client.ClientRegistrar;
 import com.github.teamfusion.spyglassplus.common.message.ResetTargetMessage;
-import com.github.teamfusion.spyglassplus.common.message.SpyglassCameraRotateMessage;
 import com.github.teamfusion.spyglassplus.common.message.SpyglassStandResetMessage;
 import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.ISpyable;
@@ -39,12 +38,9 @@ public class InputEvents {
 		//reset spyglass stands look
 		if (Minecraft.getInstance().player != Minecraft.getInstance().cameraEntity && Minecraft.getInstance().player.isShiftKeyDown()) {
 			Minecraft.getInstance().setCameraEntity(Minecraft.getInstance().player);
-			((ISpyable) Minecraft.getInstance().player).setSpyglassStands(null);
-			((ISpyable) Minecraft.getInstance().player).setCameraRotX(0.0F);
-			((ISpyable) Minecraft.getInstance().player).setCameraRotY(0.0F);
 			SpyglassPlus.CHANNEL.sendToServer(new SpyglassStandResetMessage(Minecraft.getInstance().player));
-			SpyglassPlus.CHANNEL.sendToServer(new SpyglassCameraRotateMessage(Minecraft.getInstance().player.getId(), ((ISpyable) Minecraft.getInstance().player).getCameraRotX(), ((ISpyable) Minecraft.getInstance().player).getCameraRotY()));
-
+			((ISpyable) Minecraft.getInstance().player).setCameraRotY(0.0F);
+			((ISpyable) Minecraft.getInstance().player).setSpyglassStands(null);
 		}
 
 		if (!keyPush) {
