@@ -64,28 +64,28 @@ public class SpyglassItemMixin extends Item {
 
 			ItemStack itemstack2 = flag ? ((ISpyable) user).getSpyGlassStands().getSpyGlass() : user.getUseItem();
 
-
-			int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), itemstack2);
-			if (i > 0) {
-				user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1, 1, false, false, false));
-			}
-			int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), itemstack2);
-			if (j > 0) {
-				Entity entity = checkEntity(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
-				MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
-				if (entity instanceof LivingEntity) {
-					((LivingEntity) entity).addEffect(effectInstance);
+			if (!level.isClientSide) {
+				int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), itemstack2);
+				if (i > 0) {
+					user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1, 1, false, false, false));
+				}
+				int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), itemstack2);
+				if (j > 0) {
+					Entity entity = checkEntity(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
+					MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
+					if (entity instanceof LivingEntity) {
+						((LivingEntity) entity).addEffect(effectInstance);
+					}
+				}
+				int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), stack);
+				if (k > 0) {
+					Entity entity = checkEntityWithNoBlockClip(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
+					MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
+					if (entity instanceof LivingEntity) {
+						((LivingEntity) entity).addEffect(effectInstance);
+					}
 				}
 			}
-			int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.COMMAND.get(), stack);
-			if (k > 0) {
-				Entity entity = checkEntityWithNoBlockClip(flag ? ((ISpyable) user).getSpyGlassStands() : user, 64.0D);
-				MobEffectInstance effectInstance = new MobEffectInstance(MobEffects.GLOWING, 2, 1, false, false, false);
-				if (entity instanceof LivingEntity) {
-					((LivingEntity) entity).addEffect(effectInstance);
-				}
-			}
-
 		}
 	}
 
