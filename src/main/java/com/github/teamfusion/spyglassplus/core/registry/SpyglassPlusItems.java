@@ -13,6 +13,6 @@ public class SpyglassPlusItems {
 
 
 	public static final RegistryObject<Item> BINOCULARS = ITEMS.register("binoculars", () -> new BinocularsItem(new Item.Properties().tab(SpyglassPlus.SPYGLASSPLUS_TAB)));
-	public static final RegistryObject<Item> SPYGLASS_STAND = ITEMS.register("spyglass_stand", () -> new SpyglassStandItem(new Item.Properties().stacksTo(1).tab(SpyglassPlus.SPYGLASSPLUS_TAB)));
+	public static final RegistryObject<Item> SPYGLASS_STAND = ITEMS.register("spyglass_stand", () -> new SpyglassStandItem(new Item.Properties().stacksTo(16).tab(SpyglassPlus.SPYGLASSPLUS_TAB)));
 
 }
