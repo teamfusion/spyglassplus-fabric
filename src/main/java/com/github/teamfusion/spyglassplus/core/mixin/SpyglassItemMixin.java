@@ -67,7 +67,7 @@ public class SpyglassItemMixin extends Item {
 			if (!level.isClientSide) {
 				int i = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.ILLUMINATING.get(), itemstack2);
 				if (i > 0) {
-					user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1, 1, false, false, false));
+					user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 4, 1, false, false, false));
 				}
 				int j = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.INDICATING.get(), itemstack2);
 				if (j > 0) {
