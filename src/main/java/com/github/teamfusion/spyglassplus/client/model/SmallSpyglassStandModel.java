@@ -45,7 +45,7 @@ public class SmallSpyglassStandModel<T extends SpyglassStandEntity> extends Spyg
 		PartDefinition holderrotate = all.addOrReplaceChild("holderrotate", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -4.0F, 0.0F, 4.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -26.0F, 0.0F));
 
 		PartDefinition spyglass = all.addOrReplaceChild("spyglass", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -3.0F, -7.0F, 2.0F, 2.0F, 11.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 13).addBox(-1.2F, -3.2F, -7.2F, 2.0F, 2.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -26.0F, 0.0F));
+				.texOffs(0, 13).addBox(-1.0F, -3.0F, -7.0F, 2.0F, 2.0F, 11.0F, new CubeDeformation(0.2F)), PartPose.offset(0.0F, -26.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
