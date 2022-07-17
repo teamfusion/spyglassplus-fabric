@@ -3,8 +3,11 @@ package com.github.teamfusion.spyglassplus;
 import com.github.teamfusion.spyglassplus.client.ClientRegistrar;
 import com.github.teamfusion.spyglassplus.common.message.ResetTargetMessage;
 import com.github.teamfusion.spyglassplus.common.message.ScrutinyResetMessage;
+import com.github.teamfusion.spyglassplus.common.message.SpyglassCameraRotateMessage;
+import com.github.teamfusion.spyglassplus.common.message.SpyglassStandResetMessage;
 import com.github.teamfusion.spyglassplus.common.message.TargetMessage;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
+import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEntityTypes;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
@@ -68,6 +71,7 @@ public class SpyglassPlus {
 
 		SpyglassPlusEnchantments.ENCHANTMENTS.register(bus);
 		SpyglassPlusItems.ITEMS.register(bus);
+		SpyglassPlusEntityTypes.ENTITIES.register(bus);
 		log(Level.INFO, "Enhancing Spyglasses!");
 		this.setupMessages();
 		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientRegistrar::setup));
@@ -85,6 +89,14 @@ public class SpyglassPlus {
 		CHANNEL.messageBuilder(ResetTargetMessage.class, 2)
 				.encoder(ResetTargetMessage::serialize).decoder(ResetTargetMessage::deserialize)
 				.consumer(ResetTargetMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(SpyglassStandResetMessage.class, 3)
+				.encoder(SpyglassStandResetMessage::serialize).decoder(SpyglassStandResetMessage::deserialize)
+				.consumer(SpyglassStandResetMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(SpyglassCameraRotateMessage.class, 4)
+				.encoder(SpyglassCameraRotateMessage::serialize).decoder(SpyglassCameraRotateMessage::deserialize)
+				.consumer(SpyglassCameraRotateMessage::handle)
 				.add();
 	}
 

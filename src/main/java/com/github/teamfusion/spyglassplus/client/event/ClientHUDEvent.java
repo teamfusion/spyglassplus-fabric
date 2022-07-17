@@ -1,6 +1,7 @@
 package com.github.teamfusion.spyglassplus.client.event;
 
 import com.github.teamfusion.spyglassplus.SpyglassPlus;
+import com.github.teamfusion.spyglassplus.core.ISpyable;
 import com.github.teamfusion.spyglassplus.core.registry.SpyglassPlusEnchantments;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
@@ -106,14 +108,17 @@ public class ClientHUDEvent {
 			scopeTick = 0;
 		}
 
-		int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.DISCOVERY.get(), mc.player.getUseItem());
+		boolean flag = ((ISpyable) Minecraft.getInstance().player).getSpyGlassStands() != null && !((ISpyable) Minecraft.getInstance().player).getSpyGlassStands().getSpyGlass().isEmpty();
+		ItemStack itemstack = flag ? ((ISpyable) Minecraft.getInstance().player).getSpyGlassStands().getSpyGlass() : mc.player.getUseItem();
+
+		int k = EnchantmentHelper.getItemEnchantmentLevel(SpyglassPlusEnchantments.DISCOVERY.get(), itemstack);
 		if (k > 0 && sidebarScale > 0) {
 			if (newDelta > ratio / 1.25F) {
 
 				if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
 					stack.pushPose();
 					stack.translate((double) leftPos, (double) topPos, 0.0D);
-					Entity entity = checkEntityWithNoBlockClip(mc.player, 64.0D);
+					Entity entity = checkEntityWithNoBlockClip(flag ? ((ISpyable) Minecraft.getInstance().player).getSpyGlassStands() : mc.player, 64.0D);
 					if (entity != null) {
 						if (entity instanceof LivingEntity) {
 
@@ -283,7 +288,7 @@ public class ClientHUDEvent {
 		gui.blit(posestack, x, y, 16 + (2 * 2 + (isContainer ? 1 : 0)) * 9, 0, 9, 9);
 	}
 
-	private static Entity checkEntityWithNoBlockClip(LivingEntity user, double distance) {
+	private static Entity checkEntityWithNoBlockClip(Entity user, double distance) {
 		Predicate<Entity> e = entity -> !entity.isSpectator() && entity.isAlive();
 		Vec3 eyePos = user.getEyePosition(1.0F);
 		Vec3 lookVec = user.getLookAngle();

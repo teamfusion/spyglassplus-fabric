@@ -9,7 +9,10 @@
   "enchantment.spyglassplus.command": "Command",
   "_comment3": "Items",
   "item.spyglassplus.binoculars": "Binoculars",
-  "_comment4": "Info",
+  "item.spyglassplus.spyglass_stand": "SpyGlass Stand",
+  "_comment4": "Entity",
+  "entity.spyglassplus.spyglass_stand": "SpyGlass Stand",
+  "_comment5": "Info",
   "spyglassplus.spyglass.info.health": "Health",
   "spyglassplus.spyglass.info.damage": "Damage",
   "spyglassplus.spyglass.info.cannot_render": "Discovery won't work without window size as 16:9, rescaling your window should fix it."
