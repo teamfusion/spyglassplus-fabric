@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+
+  "id": "spyglassplus",
+  "version": "${version}",
+  "license": [
+    "MIT (Code)",
+    "All Rights Reserved (Assets)"
+  ],
+
+  "name": "Spyglass+",
+  "icon": "assets/spyglassplus/icon.png",
+  "description": "DESCRIPTION",
+
+  "authors": [
+    "Team Fusion"
+  ],
+  "contributors": ["",
+    "Andante"
+  ],
+  "contact": {
+    "sources": "https://github.com/teamfusion/spyglassplus-fabric",
+    "issues": "https://github.com/teamfusion/spyglassplus-fabric/issues"
+  },
+  "custom": {
+    "modmenu": { "links": { "mod.spyglassplus.contact.discord": "https://discord.gg/wGw5N7peR7" } }
+  },
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [ "com.github.teamfusion.spyglassplus.impl.SpyglassPlusImpl" ]
+  },
+  "mixins": [ "spyglassplus.mixins.json" ],
+
+  "depends": {
+    "java": ">=17",
+    "minecraft": ">=1.19",
+    "fabricloader": ">=0.14",
+    "fabric": ">=0.58"
+  }
+}
