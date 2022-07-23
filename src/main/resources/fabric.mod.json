@@ -28,7 +28,9 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [ "com.github.teamfusion.spyglassplus.impl.SpyglassPlusImpl" ]
+    "main": [ "com.github.teamfusion.spyglassplus.impl.SpyglassPlusImpl" ],
+
+    "fabric-datagen": [ "com.github.teamfusion.spyglassplus.impl.data.SpyglassPlusDataGeneratorImpl" ]
   },
   "mixins": [ "spyglassplus.mixins.json" ],
 

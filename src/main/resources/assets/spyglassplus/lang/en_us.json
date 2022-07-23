@@ -1,4 +1,8 @@
 {
   "mod.spyglassplus.name": "Spyglass+",
-  "mod.spyglassplus.contact.discord": "Discord"
+  "mod.spyglassplus.contact.discord": "Discord",
+
+  "itemGroup.spyglassplus.item_group": "Spyglass+",
+
+  "item.spyglassplus.binoculars": "Binoculars"
 }

@@ -28,6 +28,16 @@ group = project.maven_group
 
 repositories {
   maven {
+    name = 'Modding Playground'
+    url  = 'https://raw.githubusercontent.com/moddingplayground/maven/main/'
+  }
+
+  maven {
+    name = 'Shedaniel'
+    url  = 'https://maven.shedaniel.me/'
+  }
+
+  maven {
     name = 'Terraformers'
     url  = 'https://maven.terraformersmc.com/releases/'
   }
@@ -40,6 +50,8 @@ dependencies {
 
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.ver_fabric}"
   modImplementation "com.terraformersmc:modmenu:${project.ver_mod_menu}"
+
+  modImplementation "net.moddingplayground.frame:frame-toymaker-v0:${project.ver_toymaker}"
 }
 
 /* Loom */

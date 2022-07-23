@@ -3,8 +3,12 @@
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_17",
   "package": "com.github.teamfusion.spyglassplus.mixin",
-  "mixins": [],
-  "client": [],
+  "mixins": [
+    "PlayerEntityMixin"
+  ],
+  "client": [
+    "client.InGameHudMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
