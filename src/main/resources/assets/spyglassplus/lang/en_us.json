@@ -4,5 +4,11 @@
 
   "itemGroup.spyglassplus.item_group": "Spyglass+",
 
-  "item.spyglassplus.binoculars": "Binoculars"
+  "item.spyglassplus.binoculars": "Binoculars",
+
+  "enchantment.spyglassplus.discovery": "Discovery",
+  "enchantment.spyglassplus.indicate": "Indicate",
+  "enchantment.spyglassplus.illuminate": "Illuminate",
+  "enchantment.spyglassplus.scrutiny": "Scrutiny",
+  "enchantment.spyglassplus.command": "Command"
 }

@@ -41,6 +41,11 @@ repositories {
     name = 'Terraformers'
     url  = 'https://maven.terraformersmc.com/releases/'
   }
+
+  maven {
+    name = 'Jitpack'
+    url  = 'https://jitpack.io'
+  }
 }
 
 dependencies {
@@ -49,6 +54,8 @@ dependencies {
   modImplementation "net.fabricmc:fabric-loader:${project.ver_loader}"
 
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.ver_fabric}"
+  include modImplementation("net.moddingplayground.frame:frame-enchantments-v0:${project.ver_enchantments}")
+
   modImplementation "com.terraformersmc:modmenu:${project.ver_mod_menu}"
 
   modImplementation "net.moddingplayground.frame:frame-toymaker-v0:${project.ver_toymaker}"

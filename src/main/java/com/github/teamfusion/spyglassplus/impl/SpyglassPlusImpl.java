@@ -1,6 +1,7 @@
 package com.github.teamfusion.spyglassplus.impl;
 
 import com.github.teamfusion.spyglassplus.api.SpyglassPlus;
+import com.github.teamfusion.spyglassplus.api.enchantment.SpyglassPlusEnchantments;
 import com.github.teamfusion.spyglassplus.api.item.SpyglassPlusItemGroups;
 import com.github.teamfusion.spyglassplus.api.item.SpyglassPlusItems;
 import com.google.common.reflect.Reflection;
@@ -11,7 +12,6 @@ public final class SpyglassPlusImpl implements SpyglassPlus, ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Initializing " + MOD_NAME);
-
-        Reflection.initialize(SpyglassPlusItemGroups.class, SpyglassPlusItems.class);
+        Reflection.initialize(SpyglassPlusItemGroups.class, SpyglassPlusItems.class, SpyglassPlusEnchantments.class);
     }
 }
