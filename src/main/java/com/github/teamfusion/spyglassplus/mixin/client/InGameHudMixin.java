@@ -2,7 +2,6 @@ package com.github.teamfusion.spyglassplus.mixin.client;
 
 import com.github.teamfusion.spyglassplus.api.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.api.item.BinocularsItem;
-import com.github.teamfusion.spyglassplus.api.item.SpyglassPlusItems;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

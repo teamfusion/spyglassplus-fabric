@@ -6,6 +6,9 @@
 
   "item.spyglassplus.binoculars": "Binoculars",
 
+  "subtitles.item.spyglassplus.binoculars.use": "Binoculars expand",
+  "subtitles.item.spyglassplus.binoculars.stop_using": "Binoculars retract",
+
   "enchantment.spyglassplus.discovery": "Discovery",
   "enchantment.spyglassplus.indicate": "Indicate",
   "enchantment.spyglassplus.illuminate": "Illuminate",

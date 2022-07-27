@@ -23,6 +23,10 @@
     "issues": "https://github.com/teamfusion/spyglassplus-fabric/issues"
   },
   "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_5538": [ "com/github/teamfusion/spyglassplus/api/item/ISpyglass" ]
+    },
+
     "modmenu": { "links": { "mod.spyglassplus.contact.discord": "https://discord.gg/wGw5N7peR7" } }
   },
 
