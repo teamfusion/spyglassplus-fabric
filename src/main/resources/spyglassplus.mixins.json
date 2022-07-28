@@ -4,10 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "package": "com.github.teamfusion.spyglassplus.mixin",
   "mixins": [
+    "ItemMixin",
     "PlayerEntityMixin",
     "SpyglassItemMixin"
   ],
   "client": [
+    "client.GameRendererMixin",
     "client.InGameHudMixin"
   ],
   "injectors": {

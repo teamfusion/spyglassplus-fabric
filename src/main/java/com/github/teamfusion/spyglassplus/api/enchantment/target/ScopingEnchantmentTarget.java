@@ -1,6 +1,6 @@
 package com.github.teamfusion.spyglassplus.api.enchantment.target;
 
-import com.github.teamfusion.spyglassplus.api.tag.SpyglassPlusItemTags;
+import com.github.teamfusion.spyglassplus.api.item.ISpyglass;
 import com.github.teamfusion.spyglassplus.impl.enchantment.SpyglassPlusEnchantmentTargetsImpl;
 import net.minecraft.item.Item;
 import net.moddingplayground.frame.api.enchantment.v0.target.CustomEnchantmentTarget;
@@ -8,10 +8,9 @@ import net.moddingplayground.frame.api.enchantment.v0.target.CustomEnchantmentTa
 /**
  * @implNote Implemented through {@link SpyglassPlusEnchantmentTargetsImpl}
  */
-@SuppressWarnings({ "unused", "deprecation" })
+@SuppressWarnings("unused")
 public class ScopingEnchantmentTarget extends CustomEnchantmentTarget {
-    @Override
-    public boolean method_8177(Item item) {
-        return item.getRegistryEntry().isIn(SpyglassPlusItemTags.SCOPING_ITEMS);
+    public boolean isAcceptableItem(Item item) {
+        return item instanceof ISpyglass;
     }
 }
