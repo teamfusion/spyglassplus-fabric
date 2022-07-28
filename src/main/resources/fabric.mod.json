@@ -32,7 +32,12 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [ "com.github.teamfusion.spyglassplus.impl.SpyglassPlusImpl" ],
+    "main": [
+      "com.github.teamfusion.spyglassplus.impl.SpyglassPlusImpl",
+      "com.github.teamfusion.spyglassplus.impl.item.SpyglassPlusItemsImpl"
+    ],
+    "client": [ "com.github.teamfusion.spyglassplus.impl.client.item.SpyglassPlusItemsClientImpl" ],
+
     "frame-enchantments:targets": [ "com.github.teamfusion.spyglassplus.impl.enchantment.SpyglassPlusEnchantmentTargetsImpl" ],
 
     "fabric-datagen": [ "com.github.teamfusion.spyglassplus.impl.data.SpyglassPlusDataGeneratorImpl" ]

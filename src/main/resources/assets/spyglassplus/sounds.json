@@ -42,5 +42,94 @@
       }
     ],
     "subtitle": "subtitles.item.spyglassplus.binoculars.stop_using"
+  },
+  "item.binoculars.adjust": {
+    "sounds": [
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.15,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.33,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.4,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.55,
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitles.item.spyglassplus.binoculars.adjust"
+  },
+  "item.binoculars.reset_adjust": {
+    "sounds": [
+      {
+        "name": "minecraft:item/spyglass/stop",
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/stop",
+        "pitch": 0.8,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/stop",
+        "pitch": 0.9,
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitles.item.spyglassplus.binoculars.reset_adjust"
+  },
+
+  "item.spyglass.adjust": {
+    "sounds": [
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.15,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.33,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.4,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/use",
+        "pitch": 1.55,
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitles.item.spyglassplus.spyglass.adjust"
+  },
+  "item.spyglass.reset_adjust": {
+    "sounds": [
+      {
+        "name": "minecraft:item/spyglass/stop",
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/stop",
+        "pitch": 0.8,
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:item/spyglass/stop",
+        "pitch": 0.9,
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitles.item.spyglassplus.spyglass.reset_adjust"
   }
 }

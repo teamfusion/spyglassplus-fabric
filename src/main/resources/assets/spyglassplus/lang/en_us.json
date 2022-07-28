@@ -5,9 +5,17 @@
   "itemGroup.spyglassplus.item_group": "Spyglass+",
 
   "item.spyglassplus.binoculars": "Binoculars",
+  "item.spyglassplus.binoculars.spyglassplus.local_scrutiny_level_tooltip": "Scope adjusted to: -%s",
+
+  "item.minecraft.spyglass.spyglassplus.local_scrutiny_level_tooltip": "Scope adjusted to: -%s",
 
   "subtitles.item.spyglassplus.binoculars.use": "Binoculars expand",
   "subtitles.item.spyglassplus.binoculars.stop_using": "Binoculars retract",
+  "subtitles.item.spyglassplus.binoculars.adjust": "Binoculars adjust",
+  "subtitles.item.spyglassplus.binoculars.reset_adjust": "Binoculars snap",
+
+  "subtitles.item.spyglassplus.spyglass.adjust": "Spyglass adjusts",
+  "subtitles.item.spyglassplus.spyglass.reset_adjust": "Spyglass snaps",
 
   "enchantment.spyglassplus.discovery": "Discovery",
   "enchantment.spyglassplus.indicate": "Indicate",
