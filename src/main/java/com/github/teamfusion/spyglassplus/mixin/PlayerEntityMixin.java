@@ -16,6 +16,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
+    /**
+     * Adds the tag {@link SpyglassPlusItemTags#SCOPING_ITEMS} as valid spyglass items.
+     */
     @Inject(method = "isUsingSpyglass", at = @At("RETURN"), cancellable = true)
     private void onIsUsingSpyglass(CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValueZ()) {

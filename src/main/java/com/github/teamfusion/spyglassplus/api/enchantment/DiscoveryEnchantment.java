@@ -1,5 +1,8 @@
 package com.github.teamfusion.spyglassplus.api.enchantment;
 
+/**
+ * @see SpyglassPlusEnchantments#DISCOVERY
+ */
 public class DiscoveryEnchantment extends ScopingEnchantment {
     public DiscoveryEnchantment(Rarity rarity) {
         super(rarity);

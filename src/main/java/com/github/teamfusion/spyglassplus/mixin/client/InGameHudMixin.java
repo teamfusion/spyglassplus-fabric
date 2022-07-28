@@ -30,6 +30,9 @@ public abstract class InGameHudMixin {
     @Shadow private int scaledWidth;
     @Shadow private int scaledHeight;
 
+    /**
+     * Renders the Binoculars' overlay instead of the Spyglass' overlay on use.
+     */
     @Inject(method = "renderSpyglassOverlay", at = @At("HEAD"), cancellable = true)
     private void onRenderSpyglassOverlay(float scale, CallbackInfo ci) {
         if (this.client.player.getActiveItem().getItem() instanceof BinocularsItem) {

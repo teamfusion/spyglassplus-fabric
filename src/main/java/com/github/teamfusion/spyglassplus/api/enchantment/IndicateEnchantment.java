@@ -1,5 +1,8 @@
 package com.github.teamfusion.spyglassplus.api.enchantment;
 
+/**
+ * @see SpyglassPlusEnchantments#INDICATE
+ */
 public class IndicateEnchantment extends ScopingEnchantment {
     public IndicateEnchantment(Rarity weight) {
         super(weight);

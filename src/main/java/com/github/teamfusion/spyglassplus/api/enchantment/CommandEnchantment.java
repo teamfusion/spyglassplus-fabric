@@ -1,5 +1,8 @@
 package com.github.teamfusion.spyglassplus.api.enchantment;
 
+/**
+ * @see SpyglassPlusEnchantments#COMMAND
+ */
 public class CommandEnchantment extends ScopingEnchantment {
     public CommandEnchantment(Rarity weight) {
         super(weight);

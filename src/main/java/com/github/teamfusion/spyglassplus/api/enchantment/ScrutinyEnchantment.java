@@ -1,5 +1,8 @@
 package com.github.teamfusion.spyglassplus.api.enchantment;
 
+/**
+ * @see SpyglassPlusEnchantments#SCRUTINY
+ */
 public class ScrutinyEnchantment extends ScopingEnchantment {
     public ScrutinyEnchantment(Rarity weight) {
         super(weight);
