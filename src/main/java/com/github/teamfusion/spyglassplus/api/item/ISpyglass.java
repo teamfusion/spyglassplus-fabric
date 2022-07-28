@@ -34,6 +34,14 @@ public interface ISpyglass {
     String LOCAL_SCRUTINY_LEVEL_KEY = "LocalScrutinyLevel";
     Identifier UPDATE_LOCAL_SCRUTINY_PACKET = new Identifier(SpyglassPlus.MOD_ID, "update_local_scrutiny");
 
+    default boolean isSpyglassEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    default int getSpyglassEnchantability() {
+        return 0;
+    }
+
     default SoundEvent getUseSound() {
         return SoundEvents.ITEM_SPYGLASS_USE;
     }

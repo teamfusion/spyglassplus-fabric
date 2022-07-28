@@ -16,6 +16,15 @@ public class ItemMixin {
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
     private void fixSpyglassIsEnchantable(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         Item that = (Item) (Object) this;
-        if (that instanceof ISpyglass) cir.setReturnValue(true);
+        if (that instanceof ISpyglass item) cir.setReturnValue(item.isSpyglassEnchantable(stack));
+    }
+
+    /**
+     * Fix {@link ISpyglass} enchantability.
+     */
+    @Inject(method = "getEnchantability", at = @At("HEAD"), cancellable = true)
+    private void fixSpyglassEnchantability(CallbackInfoReturnable<Integer> cir) {
+        Item that = (Item) (Object) this;
+        if (that instanceof ISpyglass item) cir.setReturnValue(item.getSpyglassEnchantability());
     }
 }
