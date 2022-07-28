@@ -38,24 +38,22 @@ public class MouseMixin {
         cancellable = true
     )
     private void handleZoomScrolling(CallbackInfo ci) {
-        if (this.eventDeltaWheel != 0) {
-            if (this.client.player.isUsingSpyglass()) {
-                ItemStack stack = this.client.player.getActiveItem();
-                if (stack.getItem() instanceof ISpyglass item) {
-                    int level = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack);
-                    if (level > 0) {
-                        int before = ISpyglass.getLocalScrutinyLevel(stack);
-                        int delta = (int) this.eventDeltaWheel;
-                        if (item.adjustScrutiny(stack, level, delta) != before) {
-                            ClientPlayNetworking.send(ISpyglass.UPDATE_LOCAL_SCRUTINY_PACKET, Util.make(PacketByteBufs.create(), buf -> buf.writeInt(delta)));
-                            this.client.player.playSound(item.getAdjustSound(), 1.0F, 1.0F);
-                            this.eventDeltaWheel = 0;
-                        }
+        if (!this.client.options.getPerspective().isFirstPerson() || this.eventDeltaWheel == 0) return;
 
-                        ci.cancel();
-                    }
-                }
+        ItemStack stack = this.client.player.getActiveItem();
+        if (!(stack.getItem() instanceof ISpyglass item)) return;
+
+        int level = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack);
+        if (level > 0) {
+            int before = ISpyglass.getLocalScrutinyLevel(stack);
+            int delta = (int) this.eventDeltaWheel;
+            if (item.adjustScrutiny(stack, level, delta) != before) {
+                ClientPlayNetworking.send(ISpyglass.UPDATE_LOCAL_SCRUTINY_PACKET, Util.make(PacketByteBufs.create(), buf -> buf.writeInt(delta)));
+                this.client.player.playSound(item.getAdjustSound(), 1.0F, 1.0F);
+                this.eventDeltaWheel = 0;
             }
+
+            ci.cancel();
         }
     }
 
@@ -72,20 +70,20 @@ public class MouseMixin {
     )
     private void resetOnMiddleMouseClick(long window, int button, int action, int mods, CallbackInfo ci) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW.GLFW_PRESS) {
-            if (this.client.player.isUsingSpyglass()) {
-                ItemStack stack = this.client.player.getActiveItem();
-                if (stack.getItem() instanceof ISpyglass item) {
-                    int level = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack);
-                    if (level > 0) {
-                        int before = ISpyglass.getLocalScrutinyLevel(stack);
-                        if (item.adjustScrutiny(stack, level, 0) != before) {
-                            ClientPlayNetworking.send(ISpyglass.UPDATE_LOCAL_SCRUTINY_PACKET, Util.make(PacketByteBufs.create(), buf -> buf.writeInt(0)));
-                            this.client.player.playSound(item.getResetAdjustSound(), 1.0F, 1.0F);
-                        }
+            if (!this.client.options.getPerspective().isFirstPerson()) return;
 
-                        ci.cancel();
-                    }
+            ItemStack stack = this.client.player.getActiveItem();
+            if (!(stack.getItem() instanceof ISpyglass item)) return;
+
+            int level = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack);
+            if (level > 0) {
+                int before = ISpyglass.getLocalScrutinyLevel(stack);
+                if (item.adjustScrutiny(stack, level, 0) != before) {
+                    ClientPlayNetworking.send(ISpyglass.UPDATE_LOCAL_SCRUTINY_PACKET, Util.make(PacketByteBufs.create(), buf -> buf.writeInt(0)));
+                    this.client.player.playSound(item.getResetAdjustSound(), 1.0F, 1.0F);
                 }
+
+                ci.cancel();
             }
         }
     }

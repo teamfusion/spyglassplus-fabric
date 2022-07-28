@@ -26,6 +26,8 @@ public class GameRendererMixin {
      */
     @Inject(method = "updateFovMultiplier", at = @At("TAIL"))
     private void modifyFovMultiplierForScrutiny(CallbackInfo ci) {
+        if (!this.client.options.getPerspective().isFirstPerson()) return;
+
         if (this.client.getCameraEntity() instanceof AbstractClientPlayerEntity player) {
             ItemStack stack = player.getActiveItem();
             int level = ISpyglass.getLocalScrutinyLevel(stack);
