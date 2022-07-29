@@ -11,6 +11,7 @@
   "client": [
     "client.GameRendererMixin",
     "client.InGameHudMixin",
+    "client.LightmapTextureManagerMixin",
     "client.MouseMixin"
   ],
   "injectors": {
