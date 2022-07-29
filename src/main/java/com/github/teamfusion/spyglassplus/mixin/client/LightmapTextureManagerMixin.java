@@ -24,7 +24,7 @@ public class LightmapTextureManagerMixin {
     /**
      * Modifies brightness for the {@link SpyglassPlusEnchantments#ILLUMINATE illuminate enchantment}.
      */
-    @Inject(method = "getBrightness", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getBrightness", at = @At("RETURN"), cancellable = true)
     private static void modifyBrightnessForIlluminate(DimensionType type, int lightLevel, CallbackInfoReturnable<Float> cir) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!client.options.getPerspective().isFirstPerson()) return;
@@ -34,7 +34,7 @@ public class LightmapTextureManagerMixin {
             long time = Util.getMeasuringTimeMs();
             if (EnchantmentHelper.getLevel(SpyglassPlusEnchantments.ILLUMINATE, stack) > 0) {
                 long diff = time - lastOpenedSpyglassAt;
-                cir.setReturnValue(diff / 1000f);
+                cir.setReturnValue(Math.max(cir.getReturnValueF(), diff / 1000f));
             } else lastOpenedSpyglassAt = time;
         }
     }
