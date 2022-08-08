@@ -3,7 +3,7 @@ package com.github.teamfusion.spyglassplus.api.item;
 import com.github.teamfusion.spyglassplus.api.SpyglassPlus;
 import com.github.teamfusion.spyglassplus.api.enchantment.target.SpyglassPlusEnchantmentTargets;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.item.Item;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -18,10 +18,18 @@ public interface SpyglassPlusItemGroups {
                                           .icon(() -> new ItemStack(Items.SPYGLASS))
                                           .appendItems((stacks, group) -> {
                                               DefaultedList<ItemStack> list = (DefaultedList<ItemStack>) stacks;
-                                              Registry.ITEM.stream().filter(ISpyglass.class::isInstance)
+
+                                              Registry.ITEM.stream()
+                                                           .filter(ISpyglass.class::isInstance)
                                                            .filter(item -> Objects.nonNull(item.getGroup()))
-                                                           .forEach(item -> list.add(new ItemStack(item)));
-                                              for (Item item : Registry.ITEM) item.appendStacks(group, list);
+                                                           .map(ItemStack::new)
+                                                           .forEach(list::add);
+
+                                              list.add(new ItemStack(SpyglassPlusItems.SYPGLASS_STAND));
+
+                                              Registry.ITEM.stream()
+                                                           .filter(EnchantedBookItem.class::isInstance)
+                                                           .forEach(item -> item.appendStacks(group, list));
                                           })
                                           .build()
                                           .setEnchantments(SpyglassPlusEnchantmentTargets.SCOPING);

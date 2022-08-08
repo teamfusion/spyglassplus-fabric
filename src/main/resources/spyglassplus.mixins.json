@@ -9,6 +9,9 @@
     "SpyglassItemMixin"
   ],
   "client": [
+    "client.CameraMixin",
+    "client.ClientPlayerEntityMixin",
+    "client.ClientPlayerInteractionManagerMixin",
     "client.GameRendererMixin",
     "client.InGameHudMixin",
     "client.LightmapTextureManagerMixin",

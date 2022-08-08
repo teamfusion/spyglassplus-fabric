@@ -20,6 +20,9 @@ public final class ModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerator gen) {
         ItemModelUploader uploader = ItemModelUploader.of(gen);
-        uploader.register(Models.GENERATED, SpyglassPlusItems.BINOCULARS);
+        uploader.register(Models.GENERATED,
+            SpyglassPlusItems.BINOCULARS,
+            SpyglassPlusItems.SYPGLASS_STAND
+        );
     }
 }

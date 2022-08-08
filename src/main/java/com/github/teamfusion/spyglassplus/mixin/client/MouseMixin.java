@@ -1,6 +1,7 @@
 package com.github.teamfusion.spyglassplus.mixin.client;
 
 import com.github.teamfusion.spyglassplus.api.enchantment.SpyglassPlusEnchantments;
+import com.github.teamfusion.spyglassplus.api.entity.ScopingEntity;
 import com.github.teamfusion.spyglassplus.api.item.ISpyglass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -8,7 +9,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Util;
 import org.lwjgl.glfw.GLFW;
@@ -38,9 +41,14 @@ public class MouseMixin {
         cancellable = true
     )
     private void handleZoomScrolling(CallbackInfo ci) {
+        ClientPlayerEntity player = this.client.player;
+
+        Entity camera = this.client.getCameraEntity();
+        if (camera != player && camera instanceof ScopingEntity scoping && scoping.isScoping()) ci.cancel();
+
         if (!this.client.options.getPerspective().isFirstPerson() || this.eventDeltaWheel == 0) return;
 
-        ItemStack stack = this.client.player.getActiveItem();
+        ItemStack stack = player.getScopingStack();
         if (!(stack.getItem() instanceof ISpyglass item)) return;
 
         int level = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack);
@@ -49,7 +57,7 @@ public class MouseMixin {
             int delta = (int) this.eventDeltaWheel;
             if (item.adjustScrutiny(stack, level, delta) != before) {
                 ClientPlayNetworking.send(ISpyglass.UPDATE_LOCAL_SCRUTINY_PACKET, Util.make(PacketByteBufs.create(), buf -> buf.writeInt(delta)));
-                this.client.player.playSound(item.getAdjustSound(), 1.0F, 1.0F);
+                player.playSound(item.getAdjustSound(), 1.0F, 1.0F);
                 this.eventDeltaWheel = 0;
             }
 
@@ -72,7 +80,7 @@ public class MouseMixin {
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW.GLFW_PRESS) {
             if (!this.client.options.getPerspective().isFirstPerson()) return;
 
-            ItemStack stack = this.client.player.getActiveItem();
+            ItemStack stack = this.client.getCameraEntity() instanceof ScopingEntity scoping ? scoping.getScopingStack() : ItemStack.EMPTY;
             if (!(stack.getItem() instanceof ISpyglass item)) return;
 
             int level = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack);

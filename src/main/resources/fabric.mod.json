@@ -24,6 +24,10 @@
   },
   "custom": {
     "loom:injected_interfaces": {
+      "net/minecraft/class_1657": [
+        "com/github/teamfusion/spyglassplus/api/entity/ScopingPlayer",
+        "com/github/teamfusion/spyglassplus/api/entity/ScopingEntity"
+      ],
       "net/minecraft/class_5538": [ "com/github/teamfusion/spyglassplus/api/item/ISpyglass" ]
     },
 
@@ -36,7 +40,11 @@
       "com.github.teamfusion.spyglassplus.impl.SpyglassPlusImpl",
       "com.github.teamfusion.spyglassplus.impl.item.SpyglassPlusItemsImpl"
     ],
-    "client": [ "com.github.teamfusion.spyglassplus.impl.client.item.SpyglassPlusItemsClientImpl" ],
+    "client": [
+      "com.github.teamfusion.spyglassplus.impl.client.SpyglassPlusClientImpl",
+      "com.github.teamfusion.spyglassplus.impl.client.item.SpyglassPlusItemsClientImpl",
+      "com.github.teamfusion.spyglassplus.impl.client.entity.SpyglassPlusEntityTypeClientImpl"
+    ],
 
     "frame-enchantments:targets": [ "com.github.teamfusion.spyglassplus.impl.enchantment.SpyglassPlusEnchantmentTargetsImpl" ],
 
@@ -48,7 +56,7 @@
     "java": ">=17",
     "minecraft": ">=1.19",
     "fabricloader": ">=0.14",
-    "fabric": ">=0.58",
+    "fabric-api": ">=0.59",
     "frame-enchantments-v0": "*"
   }
 }

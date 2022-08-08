@@ -1,10 +1,10 @@
 package com.github.teamfusion.spyglassplus.mixin.client;
 
 import com.github.teamfusion.spyglassplus.api.enchantment.SpyglassPlusEnchantments;
+import com.github.teamfusion.spyglassplus.api.entity.ScopingEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
@@ -29,8 +29,8 @@ public class LightmapTextureManagerMixin {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!client.options.getPerspective().isFirstPerson()) return;
 
-        if (client.getCameraEntity() instanceof AbstractClientPlayerEntity player) {
-            ItemStack stack = player.getActiveItem();
+        if (client.getCameraEntity() instanceof ScopingEntity scoping) {
+            ItemStack stack = scoping.getScopingStack();
             long time = Util.getMeasuringTimeMs();
             if (EnchantmentHelper.getLevel(SpyglassPlusEnchantments.ILLUMINATE, stack) > 0) {
                 long diff = time - lastOpenedSpyglassAt;

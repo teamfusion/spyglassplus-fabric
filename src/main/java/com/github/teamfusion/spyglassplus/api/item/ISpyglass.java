@@ -102,8 +102,8 @@ public interface ISpyglass {
      * Receives a local scrutiny update from the client and updates the server.
      */
     static void updateLocalScrutinyServer(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
-        if (player.isUsingSpyglass()) {
-            ItemStack stack = player.getActiveItem();
+        if (player.isScoping()) {
+            ItemStack stack = player.getScopingStack();
             if (stack.getItem() instanceof ISpyglass item) {
                 int level = EnchantmentHelper.getLevel(SpyglassPlusEnchantments.SCRUTINY, stack);
                 if (level > 0) {

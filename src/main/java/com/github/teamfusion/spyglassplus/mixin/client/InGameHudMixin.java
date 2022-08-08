@@ -1,6 +1,7 @@
 package com.github.teamfusion.spyglassplus.mixin.client;
 
 import com.github.teamfusion.spyglassplus.api.SpyglassPlus;
+import com.github.teamfusion.spyglassplus.api.entity.ScopingEntity;
 import com.github.teamfusion.spyglassplus.api.item.BinocularsItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -35,7 +36,7 @@ public abstract class InGameHudMixin {
      */
     @Inject(method = "renderSpyglassOverlay", at = @At("HEAD"), cancellable = true)
     private void onRenderSpyglassOverlay(float scale, CallbackInfo ci) {
-        if (this.client.player.getActiveItem().getItem() instanceof BinocularsItem) {
+        if (this.client.getCameraEntity() instanceof ScopingEntity scoping && scoping.getScopingStack().getItem() instanceof BinocularsItem) {
             this.renderBinocularsOverlay(scale);
             ci.cancel();
         }

@@ -131,5 +131,60 @@
       }
     ],
     "subtitle": "subtitles.item.spyglassplus.spyglass.reset_adjust"
+  },
+
+  "entity.spyglass_stand.break": {
+    "sounds": [
+      "minecraft:entity/armorstand/break1",
+      "minecraft:entity/armorstand/break2",
+      "minecraft:entity/armorstand/break3",
+      "minecraft:entity/armorstand/break4"
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "entity.spyglass_stand.fall": {
+    "sounds": [
+      "minecraft:dig/wood1",
+      "minecraft:dig/wood2",
+      "minecraft:dig/wood3",
+      "minecraft:dig/wood4"
+    ],
+    "subtitle": "subtitles.entity.spyglassplus.spyglass_stand.fall"
+  },
+  "entity.spyglass_stand.hit": {
+    "sounds": [
+      "minecraft:entity/armorstand/hit1",
+      "minecraft:entity/armorstand/hit2",
+      "minecraft:entity/armorstand/hit3",
+      "minecraft:entity/armorstand/hit4"
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "entity.spyglass_stand.place": {
+    "sounds": [
+      "minecraft:dig/stone1",
+      "minecraft:dig/stone2",
+      "minecraft:dig/stone3",
+      "minecraft:dig/stone4"
+    ],
+    "subtitle": "subtitles.block.generic.place"
+  },
+  "entity.spyglass_stand.shrink": {
+    "sounds": [
+      {
+        "name": "minecraft:random/pop",
+        "pitch": 1.5
+      }
+    ],
+    "subtitle": "subtitles.entity.spyglassplus.spyglass_stand.shrink"
+  },
+  "entity.spyglass_stand.enlarge": {
+    "sounds": [
+      {
+        "name": "minecraft:random/pop",
+        "pitch": 0.5
+      }
+    ],
+    "subtitle": "subtitles.entity.spyglassplus.spyglass_stand.enlarge"
   }
 }

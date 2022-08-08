@@ -7,12 +7,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public interface SpyglassPlusItems {
     Item BINOCULARS = unstackable("binoculars", noGroup(BinocularsItem::new));
+    Item SYPGLASS_STAND = register("spyglass_stand", modify(SpyglassStandItem::new, settings -> settings.maxCount(16)));
 
     private static Function<FabricItemSettings, Item> noGroup(Function<FabricItemSettings, Item> item) {
         return settings -> item.apply(settings.group(null));
+    }
+
+    private static Function<FabricItemSettings, Item> modify(Function<FabricItemSettings, Item> item, UnaryOperator<FabricItemSettings> modifier) {
+        return settings -> item.apply(modifier.apply(settings));
     }
 
     private static Item register(String id, Item item) {
