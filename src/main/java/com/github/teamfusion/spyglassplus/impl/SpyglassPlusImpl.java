@@ -13,7 +13,7 @@ public final class SpyglassPlusImpl implements SpyglassPlus, ModInitializer {
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public void onInitialize() {
-        LOGGER.info("Initializing " + MOD_NAME);
+        LOGGER.info("Initializing {}", MOD_NAME);
         Reflection.initialize(
             SpyglassPlusItemGroups.class,
             SpyglassPlusSoundEvents.class,

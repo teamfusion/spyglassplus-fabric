@@ -12,6 +12,8 @@ public final class SpyglassPlusClientImpl implements SpyglassPlus, ClientModInit
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public void onInitializeClient() {
+        LOGGER.info("Initializing {}-CLIENT", MOD_NAME);
+
         Reflection.initialize(SpyglassPlusEntityModelLayers.class);
     }
 }
